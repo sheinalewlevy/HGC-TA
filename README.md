@@ -10,7 +10,7 @@ Data analysis R scripts are the following:
 - **0_datapreparation.R**: Code for preparing the dataset for analysis, in-text Figure 2, and additional checks. This script can be used alongside the society-specific datasets. 
 - **1_ecologicalvariables**.R: Code used to generate the climatic and risk variables. Note that we are sharing this script for transparency purposes only--we have not supplied the Environmental_variables file because this file contains GPS points for each field site. In order to protect the privacy of participants, who for the most part come from small communities with few members, we have chosen not to publish these GPS points.
 - **2_models.R**: Code used in the stan models. This code can be used in conjunction with dataset.csv. Note that results will not match those in the paper without Tsimane data. Note as well that models take weeks to fit.
-- **3_figures.R**: Code used to investigate posterior distributions and make in-text and supplementary figures
+- **3_figures.R**: Code used to investigate posterior distributions and make in-text and supplementary figures. This could cal be used in conjunction with dataset.csv and all .rda files (see below). Note that results will not match those in the paper without Tsimane data. 
 
 Model outputs are the following:
 - **postX.rda**: Posterior distributions from each model. X=model numbers from 2_models.R
