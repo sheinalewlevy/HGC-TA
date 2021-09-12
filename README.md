@@ -13,6 +13,6 @@ Data analysis R scripts are the following:
 - **3_figures.R**: Code used to investigate posterior distributions and make in-text and supplementary figures
 
 Model outputs are the following:
-- **postX.rda**: Posterior distributions from each model. Numbers reflect model numbers from 2_models.R
+- **postX.rda**: Posterior distributions from each model. X=model numbers from 2_models.R
 - **WAIC.rda**: WAIC values for the main models in the text
-- **TAX.rda**: Model estimates. Numbers reflect model numbers from 2_models.R
+- **TAX.rda**: Model estimates. X=model numbers from 2_models.R
