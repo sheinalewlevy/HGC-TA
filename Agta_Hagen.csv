@@ -1,0 +1,16 @@
+newID,Age,Sex,food_production,household,childcare,play,offset,doubled,Society,Year
+Agta_1,4,0,1,0,0,14,31,0,Agta,2017
+Agta_2,9,1,4,0,0,2,15,0,Agta,2017
+Agta_3,8,1,3,0,0,2,15,0,Agta,2017
+Agta_4,8,1,1,0,3,7,14,0,Agta,2017
+Agta_5,8,0,4,2,4,5,29,2,Agta,2017
+Agta_6,7,0,3,0,3,3,22,0,Agta,2017
+Agta_7,12,1,2,0,0,1,8,0,Agta,2017
+Agta_8,8,1,1,1,2,4,12,1,Agta,2017
+Agta_9,3,1,0,0,0,16,43,0,Agta,2017
+Agta_10,3,0,0,0,0,15,39,0,Agta,2017
+Agta_11,4,0,0,0,0,1,6,0,Agta,2017
+Agta_12,5,1,0,0,0,8,19,0,Agta,2017
+Agta_13,4,1,1,0,0,5,15,0,Agta,2017
+Agta_14,5,1,1,0,0,8,17,0,Agta,2017
+Agta_15,4,1,0,1,0,19,34,0,Agta,2017
