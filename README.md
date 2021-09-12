@@ -5,7 +5,7 @@ Datasets are the following:
 - 12 datasets for 11 hunter-gatherer and mixed subsistence societies. The datasets are named as **Society_Author**. Note that data for Tsimane should be requested directly from Jonathan Stieglitz (jonathan.stieglitz@gmail.com)
 - **group_variables.csv**: The society-level variables used in the analysis
 - **dataset.csv**: The processed dataset used in the analysis
-- - **TAX.csv**: Model estimates. X=model numbers from 2_models.R
+- **TAX.csv**: Model estimates. X=model numbers from 2_models.R
 
 Data analysis R scripts are the following:
 - **0_datapreparation.R**: Code for preparing the dataset for analysis, in-text Figure 2, and additional checks. This script can be used alongside the society-specific datasets. 
