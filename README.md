@@ -16,4 +16,5 @@ Data analysis R scripts are the following:
 Model outputs are:
 - **postX.rda**: Posterior distributions from each model. X=model numbers from 2_models.R
 - **WAIC.rda**: WAIC values for the main models in the text
+
 Due to file size limits, these available upon request from Sheina Lew-Levy (sheinalewlevy@gmail.com)
