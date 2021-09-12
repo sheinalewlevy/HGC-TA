@@ -1,5 +1,5 @@
 # HGC-TA
-This is the data and code for: "Cross-cultural variation in child and adolescent time allocation to work and play in twelve hunter-gatherer and mixed-subsistence societies"
+This is the data and code for: "Cross-cultural variation in child and adolescent time allocation to work and play in twelve hunter-gatherer and mixed-subsistence societies."
 
 Datasets are the following:
 - 12 datasets for 11 hunter-gatherer and mixed subsistence societies. The datasets are named as **Society_Author**. Note that data for Tsimane should be requested directly from Jonathan Stieglitz (jonathan.stieglitz@gmail.com)
