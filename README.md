@@ -13,8 +13,8 @@ Data analysis R scripts are the following:
 - **2_models.R**: Code used in the stan models. This code can be used in conjunction with dataset.csv. Note that results will not match those in the paper without Tsimane data. Note as well that models take weeks to fit.
 - **3_figures.R**: Code used to investigate posterior distributions and make in-text and supplementary figures. This could cal be used in conjunction with dataset.csv and all .rda files (see below). Note that results will not match those in the paper without Tsimane data. 
 
-Model outputs are:
+Due to file size limits, model outputs are [available for download as a zip file here](https://www.dropbox.com/s/xoofgl5suuphbrq/post.zip?dl=0) or upon request from Sheina Lew-Levy (sheinalewlevy@gmail.com). Model outputs are:
 - **postX.rda**: Posterior distributions from each model. X=model numbers from 2_models.R
 - **WAIC.rda**: WAIC values for the main models in the text
 
-Due to file size limits, model outputs are [available for download as a zip file here](https://www.dropbox.com/s/xoofgl5suuphbrq/post.zip?dl=0) or upon request from Sheina Lew-Levy (sheinalewlevy@gmail.com)
+
