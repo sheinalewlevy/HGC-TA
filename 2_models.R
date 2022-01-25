@@ -296,8 +296,8 @@ write.csv(TA2,"TA2.csv")
 post2<-extract.samples(mfit_model2)
 save(post2, file = "post2.rda")
 
-##specify data for model 3, with division of labor 
-data_list3<-list(
+##specify data for model 5, with division of labor 
+data_list5<-list(
   K=K,
   N=N,
   N_id=N_id,
@@ -311,7 +311,7 @@ data_list3<-list(
   ado=d$Ado,
   nonforaged=d$nonforaged_z)
 
-model3 <- "
+model5 <- "
 data{
 int N;
 int N_id;
@@ -416,7 +416,7 @@ log_lik[i] = categorical_logit_lpmf( y[i] | p );
 }
 "
 
-start_model3 <- list(
+start_model5 <- list(
   a = rep(0,K-1),
   b_sex = rep(0,K-1),
   b_middle= rep(0,K-1),
@@ -434,19 +434,19 @@ start_model3 <- list(
   z_society = matrix(0,nrow=K-1,ncol=N_society)
 )
 
-n_chains_model3 <- 3
-init_model3 <- list()
-for ( i in 1:n_chains_model3 ) init_model3[[i]] <- start_model3
+n_chains_model5 <- 3
+init_model5 <- list()
+for ( i in 1:n_chains_model5 ) init_model5[[i]] <- start_model5
 
-mfit_model3 <- cstan( model_code=model3 , data=data_list3 , chains=n_chains_model3 , cores= 3 , warmup=1000, iter=2000, init=init_model3 , control = list(adapt_delta = 0.99, max_treedepth = 15))
+mfit_model5 <- cstan( model_code=model5 , data=data_list5 , chains=n_chains_model5 , cores= 3 , warmup=1000, iter=2000, init=init_model5 , control = list(adapt_delta = 0.99, max_treedepth = 15))
 
-TA3<-precis(mfit_model3,dept=3,prob=0.95)
-write.csv(TA3,"TA3.csv")
-post3<-extract.samples(mfit_model3)
-save(post3, file = "post3.rda")
+TA5<-precis(mfit_model5,dept=3,prob=0.95)
+write.csv(TA5,"TA5.csv")
+post5<-extract.samples(mfit_model5)
+save(post5, file = "post5.rda")
 
-##specify data for model 4
-data_list4<-list(
+##specify data for model 3
+data_list3<-list(
   K=K,
   N=N,
   N_id=N_id,
@@ -463,7 +463,7 @@ data_list4<-list(
   prec=d$prec_z,
   CV=d$CV_z)
 
-model4 <- "
+model3 <- "
 data{
 int N;
 int N_id;
@@ -575,7 +575,7 @@ log_lik[i] = categorical_logit_lpmf( y[i] | p );
 }
 "
 
-start_model4 <- list(
+start_model3 <- list(
   a = rep(0,K-1),
   b_sex = rep(0,K-1),
   b_middle= rep(0,K-1),
@@ -594,19 +594,19 @@ start_model4 <- list(
   z_society = matrix(0,nrow=K-1,ncol=N_society)
 )
 
-n_chains_model4 <- 3
-init_model4 <- list()
-for ( i in 1:n_chains_model4 ) init_model4[[i]] <- start_model4
+n_chains_model3 <- 3
+init_model3 <- list()
+for ( i in 1:n_chains_model3 ) init_model3[[i]] <- start_model3
 
-mfit_model4 <- cstan( model_code=model4 , data=data_list4 , chains=n_chains_model4 , cores= 3 , warmup=1000, iter=2000, init=init_model4 , control = list(adapt_delta = 0.99, max_treedepth = 15))
+mfit_model3 <- cstan( model_code=model3 , data=data_list3 , chains=n_chains_model3 , cores= 3 , warmup=1000, iter=2000, init=init_model3 , control = list(adapt_delta = 0.99, max_treedepth = 15))
 
-TA4<-precis(mfit_model4,dept=3,prob=0.95)
-write.csv(TA4,"TA4.csv")
-post4<-extract.samples(mfit_model4)
-save(post4, file = "post4.rda")
+TA3<-precis(mfit_model3,dept=3,prob=0.95)
+write.csv(TA3,"TA3.csv")
+post3<-extract.samples(mfit_model3)
+save(post3, file = "post3.rda")
 
-##specify data for model 5
-data_list5<-list(
+##specify data for model 4
+data_list4<-list(
   K=K,
   N=N,
   N_id=N_id,
@@ -622,7 +622,7 @@ data_list5<-list(
   dens=d$dens,
   snake=d$snake_z)
 
-model5 <- "
+model4 <- "
 data{
 int N;
 int N_id;
@@ -729,7 +729,7 @@ log_lik[i] = categorical_logit_lpmf( y[i] | p );
 }
 "
 
-start_model5 <- list(
+start_model4 <- list(
   a = rep(0,K-1),
   b_sex = rep(0,K-1),
   b_middle= rep(0,K-1),
@@ -747,23 +747,23 @@ start_model5 <- list(
   z_society = matrix(0,nrow=K-1,ncol=N_society)
 )
 
-n_chains_model5 <- 3
-init_model5 <- list()
-for ( i in 1:n_chains_model5 ) init_model5[[i]] <- start_model5
+n_chains_model4 <- 3
+init_model4 <- list()
+for ( i in 1:n_chains_model4 ) init_model4[[i]] <- start_model4
 
-mfit_model5 <- cstan( model_code=model5 , data=data_list5 , chains=n_chains_model5 , cores= 3 , warmup=1000, iter=2000, init=init_model5, control = list(adapt_delta = 0.99, max_treedepth = 15))
+mfit_model4 <- cstan( model_code=model4 , data=data_list4 , chains=n_chains_model4 , cores= 3 , warmup=1000, iter=2000, init=init_model4, control = list(adapt_delta = 0.99, max_treedepth = 15))
 
-TA5<-precis(mfit_model5,dept=3,prob=0.95)
-write.csv(TA5,"TA5.csv")
-post5<-extract.samples(mfit_model5)
-save(post5, file = "post5.rda")
+TA4<-precis(mfit_model4,dept=3,prob=0.95)
+write.csv(TA4,"TA4.csv")
+post4<-extract.samples(mfit_model4)
+save(post4, file = "post4.rda")
 
 ##calculate WAIC
 waicTA<-compare(mfit_model1,mfit_model2,mfit_model3, mfit_model4, mfit_model5)
 plot(waicTA)
 
 ##Supplementary models
-model4.1 <- "
+model3.1 <- "
 data{
 int N;
 int N_id;
@@ -866,7 +866,7 @@ log_lik[i] = categorical_logit_lpmf( y[i] | p );
 }
 "
 
-start_model4.1 <- list(
+start_model3.1 <- list(
   a = rep(0,K-1),
   b_sex = rep(0,K-1),
   b_middle= rep(0,K-1),
@@ -883,18 +883,18 @@ start_model4.1 <- list(
   z_society = matrix(0,nrow=K-1,ncol=N_society)
 )
 
-n_chains_model4.1 <- 3
-init_model4.1 <- list()
-for ( i in 1:n_chains_model4.1 ) init_model4.1[[i]] <- start_model4.1
+n_chains_model3.1 <- 3
+init_model3.1 <- list()
+for ( i in 1:n_chains_model3.1 ) init_model3.1[[i]] <- start_model3.1
 
-mfit_model4.1 <- cstan( model_code=model4.1 , data=data_list4 , chains=n_chains_model4.1, cores= 3 , warmup=1000, iter=2000, init=init_model4.1 , control = list(adapt_delta = 0.99, max_treedepth = 15))
+mfit_model3.1 <- cstan( model_code=model3.1 , data=data_list3 , chains=n_chains_model3.1, cores= 3 , warmup=1000, iter=2000, init=init_model3.1 , control = list(adapt_delta = 0.99, max_treedepth = 15))
 
-TA4.1<-precis(mfit_model4.1,dept=3,prob=0.95)
-write.csv(TA4.1,"TA4.1.csv")
-post4.1<-extract.samples(mfit_model4.1)
-save(post4.1, file = "post4.1.rda")
+TA3.1<-precis(mfit_model3.1,dept=3,prob=0.95)
+write.csv(TA3.1,"TA3.1.csv")
+post3.1<-extract.samples(mfit_model3.1)
+save(post3.1, file = "post3.1.rda")
 
-model4.2 <- "
+model3.2 <- "
 data{
 int N;
 int N_id;
@@ -997,7 +997,7 @@ log_lik[i] = categorical_logit_lpmf( y[i] | p );
 }
 "
 
-start_model4.2 <- list(
+start_model3.2 <- list(
   a = rep(0,K-1),
   b_sex = rep(0,K-1),
   b_middle= rep(0,K-1),
@@ -1014,18 +1014,18 @@ start_model4.2 <- list(
   z_society = matrix(0,nrow=K-1,ncol=N_society)
 )
 
-n_chains_model4.2 <- 3
-init_model4.2 <- list()
-for ( i in 1:n_chains_model4.2 ) init_model4.2[[i]] <- start_model4.2
+n_chains_model3.2 <- 3
+init_model3.2 <- list()
+for ( i in 1:n_chains_model3.2 ) init_model3.2[[i]] <- start_model3.2
 
-mfit_model4.2 <- cstan( model_code=model4.2 , data=data_list4 , chains=n_chains_model4.2, cores= 3 , warmup=1000, iter=2000, init=init_model4.2 , control = list(adapt_delta = 0.99, max_treedepth = 15))
+mfit_model3.2 <- cstan( model_code=model3.2 , data=data_list3 , chains=n_chains_model3.2, cores= 3 , warmup=1000, iter=2000, init=init_model3.2 , control = list(adapt_delta = 0.99, max_treedepth = 15))
 
-TA4.2<-precis(mfit_model4.2,dept=3,prob=0.95)
-write.csv(TA4.2,"TA4.2.csv")
-post4.2<-extract.samples(mfit_model4.2)
-save(post4.2, file = "post4.2.rda")
+TA3.2<-precis(mfit_model3.2,dept=3,prob=0.95)
+write.csv(TA3.2,"TA3.2.csv")
+post3.2<-extract.samples(mfit_model3.2)
+save(post3.2, file = "post3.2.rda")
 
-model4.3 <- "
+model3.3 <- "
 data{
 int N;
 int N_id;
@@ -1129,7 +1129,7 @@ log_lik[i] = categorical_logit_lpmf( y[i] | p );
 }
 "
 
-start_model4.3 <- list(
+start_model3.3 <- list(
   a = rep(0,K-1),
   b_sex = rep(0,K-1),
   b_middle= rep(0,K-1),
@@ -1146,18 +1146,18 @@ start_model4.3 <- list(
   z_society = matrix(0,nrow=K-1,ncol=N_society)
 )
 
-n_chains_model4.3 <- 3
-init_model4.3 <- list()
-for ( i in 1:n_chains_model4.3 ) init_model4.3[[i]] <- start_model4.3
+n_chains_model3.3 <- 3
+init_model3.3 <- list()
+for ( i in 1:n_chains_model3.3 ) init_model3.3[[i]] <- start_model3.3
 
-mfit_model4.3 <- cstan( model_code=model4.3 , data=data_list4 , chains=n_chains_model4.3, cores= 3 , warmup=1000, iter=2000, init=init_model4.3 , control = list(adapt_delta = 0.99, max_treedepth = 15))
+mfit_model3.3 <- cstan( model_code=model3.3 , data=data_list3 , chains=n_chains_model3.3, cores= 3 , warmup=1000, iter=2000, init=init_model3.3 , control = list(adapt_delta = 0.99, max_treedepth = 15))
 
-TA4.3<-precis(mfit_model4.3,dept=3,prob=0.95)
-write.csv(TA4.3,"TA4.3.csv")
-post4.3<-extract.samples(mfit_model4.3)
-save(post4.3, file = "post4.3.rda")
+TA3.3<-precis(mfit_model3.3,dept=3,prob=0.95)
+write.csv(TA3.3,"TA3.3.csv")
+post3.3<-extract.samples(mfit_model3.3)
+save(post3.3, file = "post3.3.rda")
 
-model4.4 <- "
+model3.4 <- "
 data{
 int N;
 int N_id;
@@ -1260,7 +1260,7 @@ log_lik[i] = categorical_logit_lpmf( y[i] | p );
 }
 "
 
-start_model4.4 <- list(
+start_model3.4 <- list(
   a = rep(0,K-1),
   b_sex = rep(0,K-1),
   b_middle= rep(0,K-1),
@@ -1277,18 +1277,18 @@ start_model4.4 <- list(
   z_society = matrix(0,nrow=K-1,ncol=N_society)
 )
 
-n_chains_model4.4 <- 3
-init_model4.4 <- list()
-for ( i in 1:n_chains_model4.4 ) init_model4.4[[i]] <- start_model4.4
+n_chains_model3.4 <- 3
+init_model3.4 <- list()
+for ( i in 1:n_chains_model3.4 ) init_model3.4[[i]] <- start_model3.4
 
-mfit_model4.4 <- cstan( model_code=model4.4 , data=data_list4 , chains=n_chains_model4.4, cores= 3 , warmup=1000, iter=2000, init=init_model4.4 , control = list(adapt_delta = 0.99, max_treedepth = 15))
+mfit_model3.4 <- cstan( model_code=model3.4 , data=data_list3 , chains=n_chains_model3.4, cores= 3 , warmup=1000, iter=2000, init=init_model3.4 , control = list(adapt_delta = 0.99, max_treedepth = 15))
 
-TA4.4<-precis(mfit_model4.4,dept=3,prob=0.95)
-write.csv(TA4.4,"TA4.4.csv")
-post4.4<-extract.samples(mfit_model4.4)
-save(post4.4, file = "post4.4.rda")
+TA3.4<-precis(mfit_model3.4,dept=3,prob=0.95)
+write.csv(TA3.4,"TA3.4.csv")
+post3.4<-extract.samples(mfit_model3.4)
+save(post3.4, file = "post3.4.rda")
 
-data_list4.5<-list(
+data_list3.5<-list(
   K=K_ds,
   N=N_ds,
   N_id=N_id_ds,
@@ -1304,7 +1304,7 @@ data_list4.5<-list(
   temp=ds$temp_z,
   prec=ds$prec_z)
 
-model4.5 <- "
+model3.5 <- "
 data{
 int N;
 int N_id;
@@ -1416,7 +1416,7 @@ log_lik[i] = categorical_logit_lpmf( y[i] | p );
 }
 "
 
-start_model4.5 <- list(
+start_model3.5 <- list(
   a = rep(0,K_ds-1),
   b_sex = rep(0,K_ds-1),
   b_middle= rep(0,K_ds-1),
@@ -1435,19 +1435,19 @@ start_model4.5 <- list(
   z_society = matrix(0,nrow=K_ds-1,ncol=N_society_ds)
 )
 
-n_chains_model4.5 <- 3
-init_model4.5 <- list()
-for ( i in 1:n_chains_model4.5 ) init_model4.5[[i]] <- start_model4.5
+n_chains_model3.5 <- 3
+init_model3.5 <- list()
+for ( i in 1:n_chains_model3.5 ) init_model3.5[[i]] <- start_model3.5
 
-mfit_model4.5 <- cstan( model_code=model4.5 , data=data_list4.5 , chains=n_chains_model4.5 , cores= 3 , warmup=1000, iter=2000, init=init_model4.5 , control = list(adapt_delta = 0.99, max_treedepth = 15))
+mfit_model3.5 <- cstan( model_code=model3.5 , data=data_list3.5 , chains=n_chains_model3.5 , cores= 3 , warmup=1000, iter=2000, init=init_model3.5 , control = list(adapt_delta = 0.99, max_treedepth = 15))
 
-TA4.5<-precis(mfit_model4.5,dept=3,prob=0.95)
-write.csv(TA4.5,"TA4.5.csv")
-post4.5<-extract.samples(mfit_model4.5)
-save(post4.5, file = "post4.5.rda")
+TA3.5<-precis(mfit_model3.5,dept=3,prob=0.95)
+write.csv(TA3.5,"TA3.5.csv")
+post3.5<-extract.samples(mfit_model3.5)
+save(post3.5, file = "post3.5.rda")
 
-##specify data for model 4.6
-data_list4.6<-list(
+##specify data for model 3.6
+data_list3.6<-list(
   K=K_dc,
   N=N_dc,
   N_id=N_id_dc,
@@ -1462,7 +1462,7 @@ data_list4.6<-list(
   temp=dc$temp_z,
   prec=dc$prec_z)
 
-model4.6 <- "
+model3.6 <- "
 data{
 int N;
 int N_id;
@@ -1565,7 +1565,7 @@ log_lik[i] = categorical_logit_lpmf( y[i] | p );
 }
 "
 
-start_model4.6 <- list(
+start_model3.6 <- list(
   a = rep(0,K_dc-1),
   b_sex = rep(0,K_dc-1),
   b_middle= rep(0,K_dc-1),
@@ -1582,18 +1582,18 @@ start_model4.6 <- list(
   z_society = matrix(0,nrow=K_dc-1,ncol=N_society_dc)
 )
 
-n_chains_model4.6 <- 3
-init_model4.6 <- list()
-for ( i in 1:n_chains_model4.6 ) init_model4.6[[i]] <- start_model4.6
+n_chains_model3.6 <- 3
+init_model3.6 <- list()
+for ( i in 1:n_chains_model3.6 ) init_model3.6[[i]] <- start_model3.6
 
-mfit_model4.6 <- cstan( model_code=model4.6 , data=data_list4.6 , chains=n_chains_model4.6 , cores= 3 , warmup=1000, iter=2000, init=init_model4.6 , control = list(adapt_delta = 0.99, max_treedepth = 15))
+mfit_model3.6 <- cstan( model_code=model3.6 , data=data_list3.6 , chains=n_chains_model3.6 , cores= 3 , warmup=1000, iter=2000, init=init_model3.6 , control = list(adapt_delta = 0.99, max_treedepth = 15))
 
-TA4.6<-precis(mfit_model4.6,dept=3,prob=0.95)
-write.csv(TA4.6,"TA4.6.csv")
-post4.6<-extract.samples(mfit_model4.6)
-save(post4.6, file = "post4.6.rda")
+TA3.6<-precis(mfit_model3.6,dept=3,prob=0.95)
+write.csv(TA3.6,"TA3.6.csv")
+post3.6<-extract.samples(mfit_model3.6)
+save(post3.6, file = "post3.6.rda")
 
-model4.7 <- "
+model3.7 <- "
 data{
 int N;
 int N_id;
@@ -1695,7 +1695,7 @@ log_lik[i] = categorical_logit_lpmf( y[i] | p );
 }
 "
 
-start_model4.7 <- list(
+start_model3.7 <- list(
   a = rep(0,K_ds-1),
   b_sex = rep(0,K_ds-1),
   b_middle= rep(0,K_ds-1),
@@ -1712,18 +1712,18 @@ start_model4.7 <- list(
   z_society = matrix(0,nrow=K_ds-1,ncol=N_society_ds)
 )
 
-n_chains_model4.7 <- 3
-init_model4.7 <- list()
-for ( i in 1:n_chains_model4.7 ) init_model4.7[[i]] <- start_model4.7
+n_chains_model3.7 <- 3
+init_model3.7 <- list()
+for ( i in 1:n_chains_model3.7 ) init_model3.7[[i]] <- start_model3.7
 
-mfit_model4.7 <- cstan( model_code=model4.7 , data=data_list4.5 , chains=n_chains_model4.7 , cores= 3 , warmup=1000, iter=2000, init=init_model4.7 , control = list(adapt_delta = 0.99, max_treedepth = 15))
+mfit_model3.7 <- cstan( model_code=model3.7 , data=data_list3.5 , chains=n_chains_model3.7 , cores= 3 , warmup=1000, iter=2000, init=init_model3.7 , control = list(adapt_delta = 0.99, max_treedepth = 15))
 
-TA4.7<-precis(mfit_model4.7,dept=3,prob=0.95)
-write.csv(TA4.7,"TA4.7.csv")
-post4.7<-extract.samples(mfit_model4.7)
-save(post4.7, file = "post4.7.rda")
+TA3.7<-precis(mfit_model3.7,dept=3,prob=0.95)
+write.csv(TA3.7,"TA3.7.csv")
+post3.7<-extract.samples(mfit_model3.7)
+save(post3.7, file = "post3.7.rda")
 
-model5.1 <- "
+model4.1 <- "
 data{
 int N;
 int N_id;
@@ -1825,7 +1825,7 @@ log_lik[i] = categorical_logit_lpmf( y[i] | p );
 }
 "
 
-start_model5.1 <- list(
+start_model4.1 <- list(
   a = rep(0,K-1),
   b_sex = rep(0,K-1),
   b_middle= rep(0,K-1),
@@ -1842,18 +1842,18 @@ start_model5.1 <- list(
   z_society = matrix(0,nrow=K-1,ncol=N_society)
 )
 
-n_chains_model5.1 <- 3
-init_model5.1 <- list()
-for ( i in 1:n_chains_model5.1 ) init_model5.1[[i]] <- start_model5.1
+n_chains_model4.1 <- 3
+init_model4.1 <- list()
+for ( i in 1:n_chains_model4.1 ) init_model4.1[[i]] <- start_model4.1
 
-mfit_model5.1 <- cstan( model_code=model5.1 , data=data_list5 , chains=n_chains_model5.1 , cores= 3 , warmup=1000, iter=2000, init=init_model5.1, control = list(adapt_delta = 0.99, max_treedepth = 15))
+mfit_model4.1 <- cstan( model_code=model4.1 , data=data_list4 , chains=n_chains_model4.1 , cores= 3 , warmup=1000, iter=2000, init=init_model4.1, control = list(adapt_delta = 0.99, max_treedepth = 15))
 
-TA5.1<-precis(mfit_model5.1,dept=3,prob=0.95)
-write.csv(TA5.1,"TA5.1.csv")
-post5.1<-extract.samples(mfit_model5.1)
-save(post5.1, file = "post5.1.rda")
+TA4.1<-precis(mfit_model4.1,dept=3,prob=0.95)
+write.csv(TA4.1,"TA4.1.csv")
+post4.1<-extract.samples(mfit_model4.1)
+save(post4.1, file = "post4.1.rda")
 
-model5.2 <- "
+model4.2 <- "
 data{
 int N;
 int N_id;
@@ -1955,7 +1955,7 @@ log_lik[i] = categorical_logit_lpmf( y[i] | p );
 }
 "
 
-start_model5.2 <- list(
+start_model4.2 <- list(
   a = rep(0,K-1),
   b_sex = rep(0,K-1),
   b_middle= rep(0,K-1),
@@ -1972,18 +1972,18 @@ start_model5.2 <- list(
   z_society = matrix(0,nrow=K-1,ncol=N_society)
 )
 
-n_chains_model5.2 <- 3
-init_model5.2 <- list()
-for ( i in 1:n_chains_model5.2 ) init_model5.2[[i]] <- start_model5.2
+n_chains_model4.2 <- 3
+init_model4.2 <- list()
+for ( i in 1:n_chains_model4.2 ) init_model4.2[[i]] <- start_model4.2
 
-mfit_model5.2 <- cstan( model_code=model5.2 , data=data_list5 , chains=n_chains_model5.2 , cores= 3 , warmup=1000, iter=2000, init=init_model5.2, control = list(adapt_delta = 0.99, max_treedepth = 15))
+mfit_model4.2 <- cstan( model_code=model4.2 , data=data_list4 , chains=n_chains_model4.2 , cores= 3 , warmup=1000, iter=2000, init=init_model4.2, control = list(adapt_delta = 0.99, max_treedepth = 15))
 
-TA5.2<-precis(mfit_model5.2,dept=3,prob=0.95)
-write.csv(TA5.2,"TA5.2.csv")
-post5.2<-extract.samples(mfit_model5.2)
-save(post5.2, file = "post5.2.rda")
+TA4.2<-precis(mfit_model4.2,dept=3,prob=0.95)
+write.csv(TA4.2,"TA4.2.csv")
+post4.2<-extract.samples(mfit_model4.2)
+save(post4.2, file = "post4.2.rda")
 
-model5.3 <- "
+model4.3 <- "
 data{
 int N;
 int N_id;
@@ -2085,7 +2085,7 @@ log_lik[i] = categorical_logit_lpmf( y[i] | p );
 }
 "
 
-start_model5.3 <- list(
+start_model4.3 <- list(
   a = rep(0,K-1),
   b_sex = rep(0,K-1),
   b_middle= rep(0,K-1),
@@ -2102,18 +2102,18 @@ start_model5.3 <- list(
   z_society = matrix(0,nrow=K-1,ncol=N_society)
 )
 
-n_chains_model5.3 <- 3
-init_model5.3 <- list()
-for ( i in 1:n_chains_model5.3 ) init_model5.3[[i]] <- start_model5.3
+n_chains_model4.3 <- 3
+init_model4.3 <- list()
+for ( i in 1:n_chains_model4.3 ) init_model4.3[[i]] <- start_model4.3
 
-mfit_model5.3 <- cstan( model_code=model5.3 , data=data_list5 , chains=n_chains_model5.3 , cores= 3 , warmup=1000, iter=2000, init=init_model5.3, control = list(adapt_delta = 0.99, max_treedepth = 15))
+mfit_model4.3 <- cstan( model_code=model4.3 , data=data_list4 , chains=n_chains_model4.3 , cores= 3 , warmup=1000, iter=2000, init=init_model4.3, control = list(adapt_delta = 0.99, max_treedepth = 15))
 
-TA5.3<-precis(mfit_model5.3,dept=3,prob=0.95)
-write.csv(TA5.3,"TA5.3.csv")
-post5.3<-extract.samples(mfit_model5.3)
-save(post5.3, file = "post5.3.rda")
+TA4.3<-precis(mfit_model4.3,dept=3,prob=0.95)
+write.csv(TA4.3,"TA4.3.csv")
+post4.3<-extract.samples(mfit_model4.3)
+save(post4.3, file = "post4.3.rda")
 
-data_list5.4<-list(
+data_list4.4<-list(
   K=K_dc,
   N=N_dc,
   N_id=N_id_dc,
@@ -2127,7 +2127,7 @@ data_list5.4<-list(
   water=dc$water_rating,
   dens=dc$dens)
 
-model5.4 <- "
+model4.4 <- "
 data{
 int N;
 int N_id;
@@ -2225,7 +2225,7 @@ log_lik[i] = categorical_logit_lpmf( y[i] | p );
 }
 "
 
-start_model5.4 <- list(
+start_model4.4 <- list(
   a = rep(0,K_dc-1),
   b_sex = rep(0,K_dc-1),
   b_middle= rep(0,K_dc-1),
@@ -2241,13 +2241,13 @@ start_model5.4 <- list(
   z_society = matrix(0,nrow=K_dc-1,ncol=N_society_dc)
 )
 
-n_chains_model5.4 <- 3
-init_model5.4 <- list()
-for ( i in 1:n_chains_model5.4 ) init_model5.4[[i]] <- start_model5.4
+n_chains_model4.4 <- 3
+init_model4.4 <- list()
+for ( i in 1:n_chains_model4.4 ) init_model4.4[[i]] <- start_model4.4
 
-mfit_model5.4 <- cstan( model_code=model5.4 , data=data_list5.4 , chains=n_chains_model5.4 , cores= 3 , warmup=1000, iter=2000, init=init_model5.4, control = list(adapt_delta = 0.99, max_treedepth = 15))
+mfit_model4.4 <- cstan( model_code=model4.4 , data=data_list4.4 , chains=n_chains_model4.4 , cores= 3 , warmup=1000, iter=2000, init=init_model4.4, control = list(adapt_delta = 0.99, max_treedepth = 15))
 
-TA5.4<-precis(mfit_model5.4,dept=3,prob=0.95)
-write.csv(TA5.4,"TA5.4.csv")
-post5.4<-extract.samples(mfit_model5.4)
-save(post5.4, file = "post5.4.rda")
+TA4.4<-precis(mfit_model4.4,dept=3,prob=0.95)
+write.csv(TA4.4,"TA4.4.csv")
+post4.4<-extract.samples(mfit_model4.4)
+save(post4.4, file = "post4.4.rda")
