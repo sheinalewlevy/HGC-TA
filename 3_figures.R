@@ -10,17 +10,19 @@ library(rethinking)
 #######################################
 ###load posterior samples and data ####
 #######################################
-load(file = "post1.rda")
-load(file = "post2.rda")
-load(file = "post3.rda")
-load(file = "post4.rda")
-load(file = "post5.rda")
-load(file = "post4.4.rda")
-load(file = "post4.5.rda")
-load(file = "post5.3.rda")
-load(file = "WAIC.rda")
+load(file="TAwaic.rda")
+load(file="post1.rda")
+load(file="post2.rda")
+load(file="post3.rda")
+load(file="post4.rda")
+load(file="post5.rda")
+load(file="post3.4.rda")
+load(file="post4.3.rda")
+load(file="post3.6.rda")
+
 d<-read.csv("dataset.csv")
 ds<-subset(d,Society!="Dukha")
+
 d$NPP_z<-(d$NPP-mean(d$NPP))/sd(d$NPP)
 d$nonforaged_z<-(d$nonforaged-mean(d$nonforaged))/sd(d$nonforaged)
 d$temp_z<-(d$meanAnnualTemp-mean(d$meanAnnualTemp))/sd(d$meanAnnualTemp)
@@ -33,11 +35,19 @@ ds$NPP_z<-(ds$NPP-mean(ds$NPP))/sd(ds$NPP)
 ds$nonforaged_z<-(ds$nonforaged-mean(ds$nonforaged))/sd(ds$nonforaged)
 ds$temp_z<-(ds$meanAnnualTemp-mean(ds$meanAnnualTemp))/sd(ds$meanAnnualTemp)
 ds$prec_z<-(ds$totalAnnualPrec-mean(ds$totalAnnualPrec))/sd(ds$totalAnnualPrec)
+
+dc<-subset(d, Ado!=1)
+dc$NPP_z<-(dc$NPP-mean(dc$NPP))/sd(dc$NPP)
+dc$nonforaged_z<-(dc$nonforaged-mean(dc$nonforaged))/sd(dc$nonforaged)
+dc$temp_z<-(dc$meanAnnualTemp-mean(dc$meanAnnualTemp))/sd(dc$meanAnnualTemp)
+dc$prec_z<-(dc$totalAnnualPrec-mean(dc$totalAnnualPrec))/sd(dc$totalAnnualPrec)
+
 ##################
 ###WAIC results###
 ##################
 waicTA
 plot(waicTA)
+
 ###############################################
 ##Correlation matrix from model 1##############
 ###############################################
@@ -117,12 +127,12 @@ rm(labels)
 rm(link.TA2)
 
 ######################################
-###Generate predictions for Model 3###
+###Generate predictions for Model 5###
 ######################################
 
-link.TA3 <- function( data ) {
-  K <- dim(post3$v_id)[3] + 1
-  ns <- dim(post3$v_id)[1]
+link.TA5 <- function( data ) {
+  K <- dim(post5$v_id)[3] + 1
+  ns <- dim(post5$v_id)[1]
   if ( missing(data) ) stop( "BOOM: Need data argument" )
   n <- seq.length
   
@@ -136,17 +146,17 @@ link.TA3 <- function( data ) {
   for ( i in 1:n ) {
     p[[i]] <- sapply( 1:K , function(k) {
       if ( k < K ) {
-        ptemp <- post3$a[,k] + 
-          post3$b_sex[,k] * data$sex[i] + 
-          post3$b_middle[,k] * data$middle[i] + 
-          post3$b_ado[,k] * data$ado[i] + 
-          post3$b_sex_middle[,k] * data$sex[i] * data$middle[i] + 
-          post3$b_sex_ado[,k] * data$sex[i] * data$ado[i] + 
-          post3$b_nonforaged[,k] * data$nonforaged[i]+
-          post3$b_div[,k] * data$div[i]+
-          post3$b_sex_div[,k] * data$div[i] * data$sex[i]
-        if ( data$id[i]>0 ) ptemp <- ptemp + post3$v_id[,data$id[i],k]
-        if ( data$society[i]>0 ) ptemp <- ptemp + post3$v_society[,data$society[i],k]
+        ptemp <- post5$a[,k] + 
+          post5$b_sex[,k] * data$sex[i] + 
+          post5$b_middle[,k] * data$middle[i] + 
+          post5$b_ado[,k] * data$ado[i] + 
+          post5$b_sex_middle[,k] * data$sex[i] * data$middle[i] + 
+          post5$b_sex_ado[,k] * data$sex[i] * data$ado[i] + 
+          post5$b_nonforaged[,k] * data$nonforaged[i]+
+          post5$b_div[,k] * data$div[i]+
+          post5$b_sex_div[,k] * data$div[i] * data$sex[i]
+        if ( data$id[i]>0 ) ptemp <- ptemp + post5$v_id[,data$id[i],k]
+        if ( data$society[i]>0 ) ptemp <- ptemp + post5$v_society[,data$society[i],k]
       } else {
         ptemp <- rep(0,ns)
       }
@@ -160,172 +170,10 @@ link.TA3 <- function( data ) {
   return(p)
 }
 
-###############################
-###Sex*Age difference figure###
-###############################
-pred_data_female_age <- data.frame(
-  id = 0 ,
-  society=0,
-  sex = 0,
-  middle = c(0,1,0),
-  ado = c(0,0,1),
-  nonforaged=mean(d$nonforaged_z),
-  div=mean(d$div)
-)
 
-pred_data_male_age <- data.frame(
-  id = 0 ,
-  society=0,
-  sex = 1,
-  middle = c(0,1,0),
-  ado = c(0,0,1),
-  nonforaged=mean(d$nonforaged_z),
-  div=mean(d$div)
-)
-
-seq.length<-3
-p_f <- link.TA3 (pred_data_female_age)
-p_m <- link.TA3 (pred_data_male_age)
-
-# Multi-panel figure showing each behavior by sex and age cat, figure S3
-p_f_mean <- sapply( 1:length(p_f) , function(i) apply(p_f[[i]],2,mean) )
-p_m_mean <- sapply( 1:length(p_m) , function(i) apply(p_m[[i]],2,mean) )
-labels.at <- c(0,1,2)
-
-quartz(height = 10 , width = 12)
-par(mfrow=c(2,2), mar=c(1,2,1,2) + 0.2 , oma=c(4,4,4,4))
-
-plot( NULL , xlim=c(-.5,2.5) , ylim=c(0,0.5) , xaxt = "n", main = " ",adj=0, ylab = "", xlab = "", cex.main = .9)
-for ( k in 1:1 ) {
-  p_f_PI <- sapply( 1:length(p_f) , function(i) PI(p_f[[i]][,k],prob=0.89) ) 
-  segments(-0.1,p_f_PI[1,1],-0.1,p_f_PI[2,1],col=col.alpha("dark orange",1),lwd=3)
-  segments(0.9,p_f_PI[1,2],0.9,p_f_PI[2,2],col=col.alpha("dark orange",1),lwd=3)
-  segments(1.9,p_f_PI[1,3],1.9,p_f_PI[2,3],col=col.alpha("dark orange",1),lwd=3)
-  points( c(-0.1,0.9,1.9) , p_f_mean[k,], pch = 21, bg = "white",col=col.alpha("dark orange",1))
-}
-axis( side = 1, at = labels.at, labels = F)
-mtext(text="Probability (Childcare)",side=2,line=2)
-
-for ( k in 1:1 ) {
-  p_m_PI <- sapply( 1:length(p_m) , function(i) PI(p_m[[i]][,k],prob=0.89) ) 
-  segments(0.1,p_m_PI[1,1],0.1,p_m_PI[2,1],col=col.alpha("purple",1),lwd=3)
-  segments(1.1,p_m_PI[1,2],1.1,p_m_PI[2,2],col=col.alpha("purple",1),lwd=3)
-  segments(2.1,p_m_PI[1,3],2.1,p_m_PI[2,3],col=col.alpha("purple",1),lwd=3)
-  points( c(0.1,1.1,2.1) , p_m_mean[k,], pch = 21, bg = "white",col=col.alpha("purple",1))
-}
-
-plot( NULL , xlim=c(-.5,2.5) , ylim=c(0,0.5) , xaxt = "n", main = "",adj=0, ylab = "", xlab = "", cex.main = .9)
-for ( k in 2:2 ) {
-  p_f_PI <- sapply( 1:length(p_f) , function(i) PI(p_f[[i]][,k],prob=0.89) ) 
-  segments(-0.1,p_f_PI[1,1],-0.1,p_f_PI[2,1],col=col.alpha("dark orange",1),lwd=3)
-  segments(0.9,p_f_PI[1,2],0.9,p_f_PI[2,2],col=col.alpha("dark orange",1),lwd=3)
-  segments(1.9,p_f_PI[1,3],1.9,p_f_PI[2,3],col=col.alpha("dark orange",1),lwd=3)
-  points( c(-0.1,0.9,1.9) , p_f_mean[k,], pch = 21, bg = "white",col=col.alpha("dark orange",1))
-}
-axis( side = 1, at = labels.at, labels = F)
-mtext(text="Probability (Food Production)",side=2,line=2)
-
-for ( k in 2:2 ) {
-  p_m_PI <- sapply( 1:length(p_m) , function(i) PI(p_m[[i]][,k],prob=0.89) ) 
-  segments(0.1,p_m_PI[1,1],0.1,p_m_PI[2,1],col=col.alpha("purple",1),lwd=3)
-  segments(1.1,p_m_PI[1,2],1.1,p_m_PI[2,2],col=col.alpha("purple",1),lwd=3)
-  segments(2.1,p_m_PI[1,3],2.1,p_m_PI[2,3],col=col.alpha("purple",1),lwd=3)
-  points( c(0.1,1.1,2.1) , p_m_mean[k,], pch = 21, bg = "white",col=col.alpha("purple",1))
-}
-
-plot( NULL , xlim=c(-.5,2.5) , ylim=c(0,0.5) , xaxt = "n", main = "",adj=0, ylab = "", xlab = "", cex.main = .9)
-for ( k in 3:3 ) {
-  p_f_PI <- sapply( 1:length(p_f) , function(i) PI(p_f[[i]][,k],prob=0.89) ) 
-  segments(-0.1,p_f_PI[1,1],-0.1,p_f_PI[2,1],col=col.alpha("dark orange",1),lwd=3)
-  segments(0.9,p_f_PI[1,2],0.9,p_f_PI[2,2],col=col.alpha("dark orange",1),lwd=3)
-  segments(1.9,p_f_PI[1,3],1.9,p_f_PI[2,3],col=col.alpha("dark orange",1),lwd=3)
-  points( c(-0.1,0.9,1.9) , p_f_mean[k,], pch = 21, bg = "white",col=col.alpha("dark orange",1))
-}
-axis( side = 1, at = labels.at, labels = F)
-mtext(text="Probability (Domestic Work)",side=2,line=2)
-axis( side = 1, at = labels.at, labels = c ("Early Childhood", "Middle Childhood", "Adolescence"))
-
-for ( k in 3:3 ) {
-  p_m_PI <- sapply( 1:length(p_m) , function(i) PI(p_m[[i]][,k],prob=0.89) ) 
-  segments(0.1,p_m_PI[1,1],0.1,p_m_PI[2,1],col=col.alpha("purple",1),lwd=3)
-  segments(1.1,p_m_PI[1,2],1.1,p_m_PI[2,2],col=col.alpha("purple",1),lwd=3)
-  segments(2.1,p_m_PI[1,3],2.1,p_m_PI[2,3],col=col.alpha("purple",1),lwd=3)
-  points( c(0.1,1.1,2.1) , p_m_mean[k,], pch = 21, bg = "white",col=col.alpha("purple",1))
-}
-
-plot( NULL , xlim=c(-.5,2.5) , ylim=c(0,0.5) , xaxt = "n", main = "",adj=0, ylab = "", xlab = "", cex.main = .9)
-for ( k in 4:4 ) {
-  p_f_PI <- sapply( 1:length(p_f) , function(i) PI(p_f[[i]][,k],prob=0.89) ) 
-  segments(-0.1,p_f_PI[1,1],-0.1,p_f_PI[2,1],col=col.alpha("dark orange",1),lwd=3)
-  segments(0.9,p_f_PI[1,2],0.9,p_f_PI[2,2],col=col.alpha("dark orange",1),lwd=3)
-  segments(1.9,p_f_PI[1,3],1.9,p_f_PI[2,3],col=col.alpha("dark orange",1),lwd=3)
-  points( c(-0.1,0.9,1.9) , p_f_mean[k,], pch = 21, bg = "white",col=col.alpha("dark orange",1))
-}
-axis( side = 1, at = labels.at, labels = F)
-mtext(text="Probability (Play)",side=2,line=2)
-axis( side = 1, at = labels.at, labels = c ("Early Childhood", "Middle Childhood", "Adolescence"))
-
-for ( k in 4:4 ) {
-  p_m_PI <- sapply( 1:length(p_m) , function(i) PI(p_m[[i]][,k],prob=0.89) ) 
-  segments(0.1,p_m_PI[1,1],0.1,p_m_PI[2,1],col=col.alpha("purple",1),lwd=3)
-  segments(1.1,p_m_PI[1,2],1.1,p_m_PI[2,2],col=col.alpha("purple",1),lwd=3)
-  segments(2.1,p_m_PI[1,3],2.1,p_m_PI[2,3],col=col.alpha("purple",1),lwd=3)
-  points( c(0.1,1.1,2.1) , p_m_mean[k,], pch = 21, bg = "white",col=col.alpha("purple",1))
-}
-
-##plot( NULL , xlim=c(-.5,2.5) , ylim=c(0,0.8) , xaxt = "n", main = "",adj=0, ylab = "", xlab = "", cex.main = .9)
-##for ( k in 5:5 ) {
-##  p_f_PI <- sapply( 1:length(p_f) , function(i) PI(p_f[[i]][,k],prob=0.89) ) 
- ## segments(-0.1,p_f_PI[1,1],-0.1,p_f_PI[2,1],col=col.alpha("dark orange",1),lwd=3)
- ## segments(0.9,p_f_PI[1,2],0.9,p_f_PI[2,2],col=col.alpha("dark orange",1),lwd=3)
- ## segments(1.9,p_f_PI[1,3],1.9,p_f_PI[2,3],col=col.alpha("dark orange",1),lwd=3)
- ## points( c(-0.1,0.9,1.9) , p_f_mean[k,], pch = 21, bg = "white",col=col.alpha("dark orange",1))
-#}
-##axis( side = 1, at = labels.at, labels = F)
-##mtext(text="Probability (Other Activities)",side=2,line=2)
-##axis( side = 1, at = labels.at, labels = c ("Early Childhood", "Middle Childhood", "Adolescence"))
-
-##for ( k in 5:5 ) {
- ## p_m_PI <- sapply( 1:length(p_m) , function(i) PI(p_m[[i]][,k],prob=0.89) ) 
- ## segments(0.1,p_m_PI[1,1],0.1,p_m_PI[2,1],col=col.alpha("purple",1),lwd=3)
- ## segments(1.1,p_m_PI[1,2],1.1,p_m_PI[2,2],col=col.alpha("purple",1),lwd=3)
-##  segments(2.1,p_m_PI[1,3],2.1,p_m_PI[2,3],col=col.alpha("purple",1),lwd=3)
-##  points( c(0.1,1.1,2.1) , p_m_mean[k,], pch = 21, bg = "white",col=col.alpha("purple",1))
-##}
-
-
-par(fig = c(0, 1, 0, 1), oma = c(0, 0, 0, 0), mar = c(1, 1, 1, 1), new = TRUE)
-plot(0, 0, type = "n", bty = "n", xaxt = "n", yaxt = "n")
-
-legend("bottomleft", 
-       inset=0, 
-       cex = 0.75, 
-       c("Female","Male"), 
-       horiz=TRUE, 
-       lty=c(1,1), 
-       lwd=c(2,2), 
-       col=c("dark orange","purple"), 
-       bg="grey96",
-       text.font=0.5)
-
-title(xlab="(A) Activity Participation by Age and Sex",line=-1, font.lab=2)
-quartz.save(file="fig3a.pdf",type="pdf")
-dev.off()
-rm(p_f)
-rm(p_f_mean)
-rm(p_f_PI)
-rm(p_m)
-rm(p_m_mean)
-rm(p_m_PI)
-rm(pred_data_female_age)
-rm(pred_data_male_age)
-rm(seq.length)
-rm(labels.at)
-rm(k)
-
-###################################################
-###Make in-text Sexual Division of Labour Figure###
-###################################################
+#####################################################################
+###Make in-text Gendered Division of Food Production Labour Figure###
+#####################################################################
 pred_data_lowdiv<- data.frame(
   id = 0 ,
   society=0,
@@ -347,10 +195,10 @@ pred_data_highdiv<- data.frame(
 )
 
 seq.length<-2
-p_lowdiv <- link.TA3 (pred_data_lowdiv)
+p_lowdiv <- link.TA5 (pred_data_lowdiv)
 p_lowdiv_mean <- sapply( 1:length(p_lowdiv) , function(i) apply(p_lowdiv[[i]],2,mean) )
 
-p_highdiv <- link.TA3 (pred_data_highdiv)
+p_highdiv <- link.TA5 (pred_data_highdiv)
 p_highdiv_mean <- sapply( 1:length(p_highdiv) , function(i) apply(p_highdiv[[i]],2,mean) )
 
 quartz(height = 8 , width = 10)
@@ -434,9 +282,9 @@ for ( k in 4:4) {
 ##labels.at<-c(0,1,2,3,4)
 axis( side = 1, at = labels.at, labels = c("Childcare","Food Production","Domestic Work","Play"))
 mtext(text="Probability (activity)",side=2,line=2)
-mtext(text="(B) Female-Biased (Top) and Male-Biased (Bottom) Sexual Division of Labour",side=1,line=3,font=2)
+mtext(text="(B) Female-Biased (Top) and Male-Biased (Bottom) Gendered Division of Food Production Labour",side=1,line=3,font=2)
 
-quartz.save(file="fig3b.pdf",type="pdf")
+quartz.save(file="fig4.pdf",type="pdf")
 dev.off()
 rm(p_highdiv)
 rm(p_highdiv_mean)
@@ -449,9 +297,9 @@ rm(pred_data_lowdiv)
 rm(seq.length)
 rm(labels.at)
 
-#########################################################
-###Make supplementary Sexual Division of Labour Figure###
-#########################################################
+###########################################################################
+###Make supplementary Gendered Division of Food Production Labour Figure###
+###########################################################################
 
 for(t in unique(d$variable)) {d[paste("r_",t,sep="")] <- ifelse(d$variable==t,1,0)}
 agg <- aggregate ( cbind (r_food_production, r_znonworkobs, r_play, r_childcare, r_household) ~ Society+ div+Sex, data = d, FUN = mean)
@@ -471,7 +319,7 @@ divf <- data.frame(
   div=div_seq
 )
 
-p_divf <- link.TA3 (divf)
+p_divf <- link.TA5 (divf)
 p_divf_mean <- sapply( 1:length(p_divf) , function(i) apply(p_divf[[i]],2,mean) )
 
 divm <- data.frame(
@@ -484,7 +332,7 @@ divm <- data.frame(
   div=div_seq
 )
 
-p_divm <- link.TA3 (divm)
+p_divm <- link.TA5 (divm)
 p_divm_mean <- sapply( 1:length(p_divm) , function(i) apply(p_divm[[i]],2,mean) )
 
 labels.at <- c(-0.5,0,0.5,1)
@@ -572,7 +420,7 @@ points(agg_m$div, agg_m$r_znonworkobs,col="purple")
 axis( side = 1, at = labels.at, labels = labels.at)
 mtext(text="Probability (Other Activities)",side=2,line=2)
 
-mtext(text="Sexual Division of Labour",side=1,line=1,outer=TRUE)
+mtext(text="Gendered Division of Food Production Labour",side=1,line=1,outer=TRUE)
 par(fig = c(0, 1, 0, 1), oma = c(0, 0, 0, 0), mar = c(0, 0, 0, 0), new = TRUE)
 plot(0, 0, type = "n", bty = "n", xaxt = "n", yaxt = "n")
 legend("bottomleft", 
@@ -587,7 +435,7 @@ legend("bottomleft",
        title="",
        text.font=0.5)
 
-quartz.save(file="figS3.pdf",type="pdf")
+quartz.save(file="figS7.pdf",type="pdf")
 dev.off()
 rm(agg)
 rm(agg_f)
@@ -603,16 +451,17 @@ rm(p_divm_PI)
 rm(div_seq)
 rm(labels.at)
 rm(seq.length)
-rm(link.TA3)
+rm(link.TA5)
 rm(t)
 rm(k)
+
 ######################################
-###Generate predictions for Model 4###
+###Generate predictions for Model 3###
 ######################################
 
-link.TA4 <- function( data ) {
-  K <- dim(post4$v_id)[3] + 1
-  ns <- dim(post4$v_id)[1]
+link.TA3 <- function( data ) {
+  K <- dim(post3$v_id)[3] + 1
+  ns <- dim(post3$v_id)[1]
   if ( missing(data) ) stop( "BOOM: Need data argument" )
   n <- seq.length
   
@@ -626,18 +475,18 @@ link.TA4 <- function( data ) {
   for ( i in 1:n ) {
     p[[i]] <- sapply( 1:K , function(k) {
       if ( k < K ) {
-        ptemp <- post4$a[,k] + 
-          post4$b_sex[,k] * data$sex[i] + 
-          post4$b_middle[,k] * data$middle[i] + 
-          post4$b_ado[,k] * data$ado[i] + 
-          post4$b_sex_middle[,k] * data$sex[i] * data$middle[i] + 
-          post4$b_sex_ado[,k] * data$sex[i] * data$ado[i] + 
-          post4$b_nonforaged[,k] * data$nonforaged[i]+
-          post4$b_NPP[,k] * data$NPP[i]+
-          post4$b_temp[,k] * data$temp[i]+
-          post4$b_prec[,k] * data$prec[i]
-        if ( data$id[i]>0 ) ptemp <- ptemp + post4$v_id[,data$id[i],k]
-        if ( data$society[i]>0 ) ptemp <- ptemp + post4$v_society[,data$society[i],k]
+        ptemp <- post3$a[,k] + 
+          post3$b_sex[,k] * data$sex[i] + 
+          post3$b_middle[,k] * data$middle[i] + 
+          post3$b_ado[,k] * data$ado[i] + 
+          post3$b_sex_middle[,k] * data$sex[i] * data$middle[i] + 
+          post3$b_sex_ado[,k] * data$sex[i] * data$ado[i] + 
+          post3$b_nonforaged[,k] * data$nonforaged[i]+
+          post3$b_NPP[,k] * data$NPP[i]+
+          post3$b_temp[,k] * data$temp[i]+
+          post3$b_prec[,k] * data$prec[i]
+        if ( data$id[i]>0 ) ptemp <- ptemp + post3$v_id[,data$id[i],k]
+        if ( data$society[i]>0 ) ptemp <- ptemp + post3$v_society[,data$society[i],k]
       } else {
         ptemp <- rep(0,ns)
       }
@@ -670,7 +519,7 @@ NPP <- data.frame(
   prec=mean(d$prec_z)
 )
 
-p_NPP <- link.TA4 (NPP)
+p_NPP <- link.TA3 (NPP)
 p_NPP_mean <- sapply( 1:length(p_NPP) , function(i) apply(p_NPP[[i]],2,mean) )
 preferred.NPP<-c(150,650,1150,1650,2150,2650)
 labels.at <- (preferred.NPP - mean(d$NPP))/sd(d$NPP)
@@ -729,7 +578,7 @@ points(agg_NPP$NPP_z, agg_NPP$r_znonworkobs)
 mtext(text="Probability (Other Activities)",side=2,line=2)
 
 mtext(text="Net Primary Productivity (NPP)",side=1,line=1,outer=TRUE)
-quartz.save(file="figS5.pdf",type="pdf")
+quartz.save(file="figS3.pdf",type="pdf")
 rm(agg_NPP)
 rm(NPP)
 rm(p_NPP)
@@ -761,7 +610,7 @@ temp <- data.frame(
   prec=mean(d$prec_z)
 )
 
-p_temp <- link.TA4 (temp)
+p_temp <- link.TA3 (temp)
 p_temp_mean <- sapply( 1:length(p_temp) , function(i) apply(p_temp[[i]],2,mean) )
 preferred.temp<-c(-5,5,15,25)
 labels.at <- (preferred.temp - mean(d$meanAnnualTemp))/sd(d$meanAnnualTemp)
@@ -821,7 +670,7 @@ mtext(text="Probability (Other Activities)",side=2,line=2)
 
 mtext(text="Annual Mean Temperature (°C)",side=1,line=1,outer=TRUE)
 
-quartz.save(file="figS6.pdf",type="pdf")
+quartz.save(file="figS4.pdf",type="pdf")
 rm(agg_temp)
 rm(p_temp)
 rm(p_temp_mean)
@@ -853,7 +702,7 @@ prec <- data.frame(
   prec=prec_seq
 )
 
-p_prec <- link.TA4 (prec)
+p_prec <- link.TA3 (prec)
 p_prec_mean <- sapply( 1:length(p_prec) , function(i) apply(p_prec[[i]],2,mean) )
 
 preferred.prec<-c(500,1000,1500,2000,2500)
@@ -913,7 +762,7 @@ points(agg_prec$prec_z, agg_prec$r_znonworkobs)
 mtext(text="Probability (Other Activities)",side=2,line=2)
 mtext(text="Annual Precipitation (mm)",side=1,line=1,outer=TRUE)
 
-quartz.save(file="figS7.pdf",type="pdf")
+quartz.save(file="figS5.pdf",type="pdf")
 rm(agg_prec)
 rm(p_prec)
 rm(p_prec_mean)
@@ -925,15 +774,15 @@ rm(prec_seq)
 rm(preferred.prec)
 rm(seq.length)
 dev.off()
-rm(link.TA4)
+rm(link.TA3)
 
 ######################################
-###Generate predictions for Model 5###
+###Generate predictions for Model 4###
 ######################################
 
-link.TA5 <- function( data ) {
-  K <- dim(post5$v_id)[3] + 1
-  ns <- dim(post5$v_id)[1]
+link.TA4 <- function( data ) {
+  K <- dim(post4$v_id)[3] + 1
+  ns <- dim(post4$v_id)[1]
   if ( missing(data) ) stop( "BOOM: Need data argument" )
   n <- seq.length
   
@@ -947,17 +796,17 @@ link.TA5 <- function( data ) {
   for ( i in 1:n ) {
     p[[i]] <- sapply( 1:K , function(k) {
       if ( k < K ) {
-        ptemp <- post5$a[,k] + 
-          post5$b_sex[,k] * data$sex[i] + 
-          post5$b_middle[,k] * data$middle[i] + 
-          post5$b_ado[,k] * data$ado[i] + 
-          post5$b_sex_middle[,k] * data$sex[i] * data$middle[i] + 
-          post5$b_sex_ado[,k] * data$sex[i] * data$ado[i] + 
-          post5$b_nonforaged[,k] * data$nonforaged[i]+
-          post5$b_water[,k] * data$water[i]+
-          post5$b_dens[,k] * data$dens[i]
-        if ( data$id[i]>0 ) ptemp <- ptemp + post5$v_id[,data$id[i],k]
-        if ( data$society[i]>0 ) ptemp <- ptemp + post5$v_society[,data$society[i],k]
+        ptemp <- post4$a[,k] + 
+          post4$b_sex[,k] * data$sex[i] + 
+          post4$b_middle[,k] * data$middle[i] + 
+          post4$b_ado[,k] * data$ado[i] + 
+          post4$b_sex_middle[,k] * data$sex[i] * data$middle[i] + 
+          post4$b_sex_ado[,k] * data$sex[i] * data$ado[i] + 
+          post4$b_nonforaged[,k] * data$nonforaged[i]+
+          post4$b_water[,k] * data$water[i]+
+          post4$b_dens[,k] * data$dens[i]
+        if ( data$id[i]>0 ) ptemp <- ptemp + post4$v_id[,data$id[i],k]
+        if ( data$society[i]>0 ) ptemp <- ptemp + post4$v_society[,data$society[i],k]
       } else {
         ptemp <- rep(0,ns)
       }
@@ -986,7 +835,7 @@ dens<- data.frame(
 )
 
 seq.length<-2
-p_dens <- link.TA5 (dens)
+p_dens <- link.TA4 (dens)
 p_dens_mean <- sapply( 1:length(p_dens) , function(i) apply(p_dens[[i]],2,mean) )
 
 labels.at <- c(1,2,3,4)
@@ -1030,15 +879,6 @@ for ( k in 4:4) {
   points( c(3.9,4.1) , p_dens_mean[k,], pch = 21, bg = "white",col=col.alpha("black",1))
 }
 
-##for ( k in 5:5) {
- ## p_dens_PI <- sapply( 1:length(p_dens) , function(i) PI(p_dens[[i]][,k],prob=0.89) ) 
- ## segments(4.75,p_dens_PI[1,1],4.75,p_dens_PI[2,1],col=col.alpha("red",1),lwd=3)
- ## segments(5.25,p_dens_PI[1,2],5.25,p_dens_PI[2,2],col=col.alpha("purple",1),lwd=3)
-  
- ## points( c(4.75,5.25) , p_dens_mean[k,], pch = 21, bg = "white",col=col.alpha("black",1))
-##}
-
-
 
 axis( side = 1, at = labels.at, labels = c("Childcare","Food Production","Domestic Work","Play"))
 mtext(text="Probability (Activity)",side=2,line=2)
@@ -1057,11 +897,11 @@ legend("bottomleft",
        title="Dangerous Mammal Density (n/km2)",
        text.font=0.5)
 
-quartz.save(file="fig4a.pdf",type="pdf")
+quartz.save(file="fig3a.pdf",type="pdf")
 
-##############################################################
+#####################################################################
 ###Same figure but with the Other Activities category for the supp###
-##############################################################
+#####################################################################
 
 labels.at <- c(1,2,3,4,5)
 
@@ -1131,7 +971,7 @@ legend("bottomleft",
        title="Dangerous Mammal Density (n/km2)",
        text.font=0.5)
 
-quartz.save(file="figS4a.pdf",type="pdf")
+quartz.save(file="figS6a.pdf",type="pdf")
 rm(dens)
 rm(p_dens)
 rm(p_dens_mean)
@@ -1157,7 +997,7 @@ Water<- data.frame(
 )
 
 seq.length<-3
-p_Water<-link.TA5 (Water)
+p_Water<-link.TA4 (Water)
 p_Water_mean <- sapply( 1:length(p_Water) , function(i) apply(p_Water[[i]],2,mean) )
 
 ##Make Figure for effect of water on children's activities
@@ -1202,14 +1042,6 @@ for ( k in 4:4 ) {
   points( c(3.75,4,4.25) , p_Water_mean[k,], pch = 21, bg = "white",col=col.alpha("black",1))
 }
 
-##for ( k in 5:5 ) {
-##  p_Water_PI <- sapply( 1:length(p_Water) , function(i) PI(p_Water[[i]][,k],prob=0.89) ) 
-##  segments(4.75,p_Water_PI[1,1],4.75,p_Water_PI[2,1],col=col.alpha("lightblue",1),lwd=3)
-##  segments(5,p_Water_PI[1,2],5,p_Water_PI[2,2],col=col.alpha("navy",1),lwd=3)
-##  segments(5.25,p_Water_PI[1,3],5.25,p_Water_PI[2,3],col=col.alpha("brown",1),lwd=3)
-  
-##  points( c(4.75,5,5.25) , p_Water_mean[k,], pch = 21, bg = "white",col=col.alpha("black",1))
-##}
 
 axis( side = 1, at = labels.at, labels = c("Childcare","Food Production","Domestic Work","Play"))
 mtext(text="Probability (Activity)",side=2,line=2)
@@ -1228,11 +1060,11 @@ legend("bottomleft",
        title="Water",
        text.font=0.5)
 
-quartz.save(file="fig4b.pdf",type="pdf")
+quartz.save(file="fig3b.pdf",type="pdf")
 
-################################################################
+#######################################################################
 ###Make same figure but for the supplement with the Other Activities###
-################################################################
+#######################################################################
 labels.at <- c(1,2,3,4,5)
 
 quartz(height = 6 , width =11)
@@ -1300,16 +1132,24 @@ legend("bottomleft",
        title="Water",
        text.font=0.5)
 
-quartz.save(file="figS4b.pdf",type="pdf")
+quartz.save(file="figS6b.pdf",type="pdf")
+dev.off()
+rm(p_Water)
+rm(p_Water_mean)
+rm(p_Water_PI)
+rm(Water)
+rm(k)
+rm(labels.at)
+rm(seq.length)
+rm(link.TA4)
 dev.off()
 
-
 ########################################
-###Generate predictions for Model 4.5###
+###Generate predictions for Model 3.5###
 ########################################
-link.TA4.5 <- function( data ) {
-  K <- dim(post4.5$v_id)[3] + 1
-  ns <- dim(post4.5$v_id)[1]
+link.TA3.5 <- function( data ) {
+  K <- dim(post3.5$v_id)[3] + 1
+  ns <- dim(post3.5$v_id)[1]
   if ( missing(data) ) stop( "BOOM: Need data argument" )
   n <- seq.length
   
@@ -1323,18 +1163,18 @@ link.TA4.5 <- function( data ) {
   for ( i in 1:n ) {
     p[[i]] <- sapply( 1:K , function(k) {
       if ( k < K ) {
-        ptemp <- post4.5$a[,k] + 
-          post4.5$b_sex[,k] * data$sex[i] + 
-          post4.5$b_middle[,k] * data$middle[i] + 
-          post4.5$b_ado[,k] * data$ado[i] + 
-          post4.5$b_sex_middle[,k] * data$sex[i] * data$middle[i] + 
-          post4.5$b_sex_ado[,k] * data$sex[i] * data$ado[i] + 
-          post4.5$b_nonforaged[,k] * data$nonforaged[i]+
-          post4.5$b_NPP[,k] * data$NPP[i]+
-          post4.5$b_temp[,k] * data$temp[i]+
-          post4.5$b_prec[,k] * data$prec[i]
-        if ( data$id[i]>0 ) ptemp <- ptemp + post4.5$v_id[,data$id[i],k]
-        if ( data$society[i]>0 ) ptemp <- ptemp + post4.5$v_society[,data$society[i],k]
+        ptemp <- post3.5$a[,k] + 
+          post3.5$b_sex[,k] * data$sex[i] + 
+          post3.5$b_middle[,k] * data$middle[i] + 
+          post3.5$b_ado[,k] * data$ado[i] + 
+          post3.5$b_sex_middle[,k] * data$sex[i] * data$middle[i] + 
+          post3.5$b_sex_ado[,k] * data$sex[i] * data$ado[i] + 
+          post3.5$b_nonforaged[,k] * data$nonforaged[i]+
+          post3.5$b_NPP[,k] * data$NPP[i]+
+          post3.5$b_temp[,k] * data$temp[i]+
+          post3.5$b_prec[,k] * data$prec[i]
+        if ( data$id[i]>0 ) ptemp <- ptemp + post3.5$v_id[,data$id[i],k]
+        if ( data$society[i]>0 ) ptemp <- ptemp + post3.5$v_society[,data$society[i],k]
       } else {
         ptemp <- rep(0,ns)
       }
@@ -1368,7 +1208,7 @@ temp_ds <- data.frame(
   prec=mean(ds$prec_z)
 )
 
-p_temp_ds <- link.TA4.5 (temp_ds)
+p_temp_ds <- link.TA3.5 (temp_ds)
 p_temp_mean_ds <- sapply( 1:length(p_temp_ds) , function(i) apply(p_temp_ds[[i]],2,mean) )
 preferred.temp<-c(17,20,23,26)
 labels.at <- (preferred.temp - mean(ds$meanAnnualTemp))/sd(ds$meanAnnualTemp)
@@ -1441,14 +1281,14 @@ rm(preferred.temp)
 rm(seq.length)
 rm(t)
 rm(temp_seq_ds)
-rm(link.TA4.5)
+rm(link.TA3.5)
 
 ########################################
-###Generate predictions for Model 4.4###
+###Generate predictions for Model 3.4###
 ########################################
-link.TA4.4 <- function( data ) {
-  K <- dim(post4.4$v_id)[3] + 1
-  ns <- dim(post4.4$v_id)[1]
+link.TA3.4 <- function( data ) {
+  K <- dim(post3.4$v_id)[3] + 1
+  ns <- dim(post3.4$v_id)[1]
   if ( missing(data) ) stop( "BOOM: Need data argument" )
   n <- seq.length
   
@@ -1462,16 +1302,16 @@ link.TA4.4 <- function( data ) {
   for ( i in 1:n ) {
     p[[i]] <- sapply( 1:K , function(k) {
       if ( k < K ) {
-        ptemp <- post4.4$a[,k] + 
-          post4.4$b_sex[,k] * data$sex[i] + 
-          post4.4$b_middle[,k] * data$middle[i] + 
-          post4.4$b_ado[,k] * data$ado[i] + 
-          post4.4$b_sex_middle[,k] * data$sex[i] * data$middle[i] + 
-          post4.4$b_sex_ado[,k] * data$sex[i] * data$ado[i] + 
-          post4.4$b_nonforaged[,k] * data$nonforaged[i]+
-          post4.4$b_CV[,k] * data$CV[i]
-        if ( data$id[i]>0 ) ptemp <- ptemp + post4.4$v_id[,data$id[i],k]
-        if ( data$society[i]>0 ) ptemp <- ptemp + post4.4$v_society[,data$society[i],k]
+        ptemp <- post3.4$a[,k] + 
+          post3.4$b_sex[,k] * data$sex[i] + 
+          post3.4$b_middle[,k] * data$middle[i] + 
+          post3.4$b_ado[,k] * data$ado[i] + 
+          post3.4$b_sex_middle[,k] * data$sex[i] * data$middle[i] + 
+          post3.4$b_sex_ado[,k] * data$sex[i] * data$ado[i] + 
+          post3.4$b_nonforaged[,k] * data$nonforaged[i]+
+          post3.4$b_CV[,k] * data$CV[i]
+        if ( data$id[i]>0 ) ptemp <- ptemp + post3.4$v_id[,data$id[i],k]
+        if ( data$society[i]>0 ) ptemp <- ptemp + post3.4$v_society[,data$society[i],k]
       } else {
         ptemp <- rep(0,ns)
       }
@@ -1505,7 +1345,7 @@ CV_d <- data.frame(
 )
 
 
-p_CV <- link.TA4.4 (CV_d)
+p_CV <- link.TA3.4 (CV_d)
 p_CV_mean <- sapply( 1:length(p_CV) , function(i) apply(p_CV[[i]],2,mean) )
 preferred.CV<-c(50,75,100,125)
 labels.at <- (preferred.CV - mean(d$precSeasonality))/sd(d$precSeasonality)
@@ -1579,14 +1419,14 @@ rm(preferred.CV)
 rm(seq.length)
 rm(t)
 rm(CV_seq)
-rm(link.TA4.4)
+rm(link.TA3.4)
 
 ########################################
-###Generate predictions for Model 5.3###
+###Generate predictions for Model 4.3###
 ########################################
-link.TA5.3 <- function( data ) {
-  K <- dim(post5.3$v_id)[3] + 1
-  ns <- dim(post5.3$v_id)[1]
+link.TA4.3 <- function( data ) {
+  K <- dim(post4.3$v_id)[3] + 1
+  ns <- dim(post4.3$v_id)[1]
   if ( missing(data) ) stop( "BOOM: Need data argument" )
   n <- seq.length
   
@@ -1600,16 +1440,16 @@ link.TA5.3 <- function( data ) {
   for ( i in 1:n ) {
     p[[i]] <- sapply( 1:K , function(k) {
       if ( k < K ) {
-        ptemp <- post5.3$a[,k] + 
-          post5.3$b_sex[,k] * data$sex[i] + 
-          post5.3$b_middle[,k] * data$middle[i] + 
-          post5.3$b_ado[,k] * data$ado[i] + 
-          post5.3$b_sex_middle[,k] * data$sex[i] * data$middle[i] + 
-          post5.3$b_sex_ado[,k] * data$sex[i] * data$ado[i] + 
-          post5.3$b_nonforaged[,k] * data$nonforaged[i]+
-          post5.3$b_snake[,k] * data$snake[i]
-        if ( data$id[i]>0 ) ptemp <- ptemp + post5.3$v_id[,data$id[i],k]
-        if ( data$society[i]>0 ) ptemp <- ptemp + post5.3$v_society[,data$society[i],k]
+        ptemp <- post4.3$a[,k] + 
+          post4.3$b_sex[,k] * data$sex[i] + 
+          post4.3$b_middle[,k] * data$middle[i] + 
+          post4.3$b_ado[,k] * data$ado[i] + 
+          post4.3$b_sex_middle[,k] * data$sex[i] * data$middle[i] + 
+          post4.3$b_sex_ado[,k] * data$sex[i] * data$ado[i] + 
+          post4.3$b_nonforaged[,k] * data$nonforaged[i]+
+          post4.3$b_snake[,k] * data$snake[i]
+        if ( data$id[i]>0 ) ptemp <- ptemp + post4.3$v_id[,data$id[i],k]
+        if ( data$society[i]>0 ) ptemp <- ptemp + post4.3$v_society[,data$society[i],k]
       } else {
         ptemp <- rep(0,ns)
       }
@@ -1639,7 +1479,7 @@ snake<- data.frame(
   nonforaged=mean(d$nonforaged_z)
 )
 
-p_snake <- link.TA5.3 (snake)
+p_snake <- link.TA4.3 (snake)
 p_snake_mean <- sapply( 1:length(p_snake) , function(i) apply(p_snake[[i]],2,mean) )
 preferred.snake<-c(0,3,6,9,12)
 labels.at <- (preferred.snake - mean(d$snake_count))/sd(d$snake_count)
@@ -1703,7 +1543,7 @@ for ( k in 5:5) {
   shade( p_snake_PI , snake_seq,col=col.alpha("black",0.1))
 }
 axis( side = 1, at = labels.at, labels = preferred.snake)
-points(agg_snake$snake_z, agg_snake$r_play)
+points(agg_snake$snake_z, agg_snake$r_znonworkobs)
 mtext(text="Probability (Other Activities)",side=2,line=2)
 
 mtext(text="Medically Important Venomous Snake Species (count)",side=1,line=1,outer=TRUE)
@@ -1711,4 +1551,244 @@ par(fig = c(0, 1, 0, 1), oma = c(0, 0, 0, 0), mar = c(0, 0, 0, 0), new = TRUE)
 plot(0, 0, type = "n", bty = "n", xaxt = "n", yaxt = "n")
 
 quartz.save(file="figS10.pdf",type="pdf")
+rm(agg_snake)
+rm(p_snake)
+rm(p_snake_mean)
+rm(p_snake_PI)
+rm(snake)
+rm(k)
+rm(labels.at)
+rm(preferred.snake)
+rm(seq.length)
+rm(snake_seq)
+rm(t)
+rm(link.TA4.3)
 dev.off()
+
+########################################
+###Generate predictions for Model 3.6###
+########################################
+
+link.TA3.6 <- function( data ) {
+  K <- dim(post3.6$v_id)[3] + 1
+  ns <- dim(post3.6$v_id)[1]
+  if ( missing(data) ) stop( "BOOM: Need data argument" )
+  n <- seq.length
+  
+  softmax2 <- function(x) {
+    x <- max(x) - x
+    exp(-x)/sum(exp(-x))
+  }
+  
+  p <- list()
+  
+  for ( i in 1:n ) {
+    p[[i]] <- sapply( 1:K , function(k) {
+      if ( k < K ) {
+        ptemp <- post3.6$a[,k] + 
+          post3.6$b_sex[,k] * data$sex[i] + 
+          post3.6$b_middle[,k] * data$middle[i] + 
+          post3.6$b_sex_middle[,k] * data$sex[i] * data$middle[i] + 
+          post3.6$b_nonforaged[,k] * data$nonforaged[i]+
+          post3.6$b_NPP[,k] * data$NPP[i]+
+          post3.6$b_temp[,k] * data$temp[i]+
+          post3.6$b_prec[,k] * data$prec[i]
+        if ( data$id[i]>0 ) ptemp <- ptemp + post3.6$v_id[,data$id[i],k]
+        if ( data$society[i]>0 ) ptemp <- ptemp + post3.6$v_society[,data$society[i],k]
+      } else {
+        ptemp <- rep(0,ns)
+      }
+      return(ptemp)
+    })
+    ## The values are converted to probabilities using the softmax function
+    ## which ensures that the predicted values across categories sum to
+    ## 100% probabilities.
+    for ( s in 1:ns ) p[[i]][s,] <- softmax2( p[[i]][s,] )
+  }
+  return(p)
+}
+
+#####################
+###Make NPP Figure###
+#####################
+seq.length <- 100
+
+NPP_seq <- seq(from= min(dc$NPP_z) , to= max(dc$NPP_z), length.out = seq.length)
+agg_NPP <- aggregate ( cbind (r_food_production, r_znonworkobs, r_play, r_childcare, r_household) ~ Society+ NPP_z, data = dc, FUN = mean)
+
+NPP <- data.frame(
+  id = 0 ,
+  society=0,
+  sex = 0,
+  middle = 0,
+  nonforaged=mean(dc$nonforaged_z),
+  NPP=NPP_seq,
+  temp=mean(dc$temp_z),
+  prec=mean(dc$prec_z)
+)
+
+p_NPP <- link.TA3.6 (NPP)
+p_NPP_mean <- sapply( 1:length(p_NPP) , function(i) apply(p_NPP[[i]],2,mean) )
+preferred.NPP<-c(145,645,1145,1645,2145,2645)
+labels.at <- (preferred.NPP - mean(dc$NPP))/sd(dc$NPP)
+
+quartz(height = 6 , width = 10)
+par(mfrow=c(2,3), mar=c(1,2,1,2) + 0.1 , oma=c(2.5,4,2.5,2.5))
+plot( NULL , xlim=c(min(dc$NPP_z),max(dc$NPP_z)) , ylim=c(0,0.4) , xaxt = "n", main = "",adj=0, ylab = "", xlab = "", cex.main = .9)
+for ( k in 1:1 ) {
+  lines( NPP_seq , p_NPP_mean[k,], lwd = 2 ,col=col.alpha("black",1))
+  p_NPP_PI <- sapply( 1:length(p_NPP) , function(i) PI(p_NPP[[i]][,k],prob=0.89) )
+  shade( p_NPP_PI , NPP_seq,col=col.alpha("black",0.1))
+}
+axis( side = 1, at = labels.at, labels = F)
+points(agg_NPP$NPP_z, agg_NPP$r_childcare)
+mtext(text="Probability (Childcare)",side=2,line=2)
+
+plot( NULL , xlim=c(min(dc$NPP_z),max(dc$NPP_z)) , ylim=c(0,0.4) , xaxt = "n", main = "",adj=0, ylab = "", xlab = "", cex.main = .9)
+for ( k in 2:2 ) {
+  lines( NPP_seq , p_NPP_mean[k,], lwd = 2 ,col=col.alpha("black",1))
+  p_NPP_PI <- sapply( 1:length(p_NPP) , function(i) PI(p_NPP[[i]][,k],prob=0.89) )
+  shade( p_NPP_PI , NPP_seq,col=col.alpha("black",0.1))
+}
+points(agg_NPP$NPP_z, agg_NPP$r_food_production)
+
+axis( side = 1, at = labels.at, labels = F)
+mtext(text="Probability (Food Production)",side=2,line=2)
+
+plot( NULL , xlim=c(min(dc$NPP_z),max(dc$NPP_z)) , ylim=c(0,0.4) , xaxt = "n", main = "",adj=0, ylab = "", xlab = "", cex.main = .9)
+for ( k in 3:3 ) {
+  lines( NPP_seq , p_NPP_mean[k,], lwd = 2 ,col=col.alpha("black",1))
+  p_NPP_PI <- sapply( 1:length(p_NPP) , function(i) PI(p_NPP[[i]][,k],prob=0.89) )
+  shade( p_NPP_PI , NPP_seq,col=col.alpha("black",0.1))
+}
+axis( side = 1, at = labels.at, labels = preferred.NPP)
+points(agg_NPP$NPP_z, agg_NPP$r_household)
+mtext(text="Probability (Domestic Work)",side=2,line=2)
+
+plot( NULL , xlim=c(min(dc$NPP_z),max(dc$NPP_z)) , ylim=c(0,0.4) , xaxt = "n", main = "",adj=0, ylab = "", xlab = "", cex.main = .9)
+for ( k in 4:4 ) {
+  lines( NPP_seq , p_NPP_mean[k,], lwd = 2 ,col=col.alpha("black",1))
+  p_NPP_PI <- sapply( 1:length(p_NPP) , function(i) PI(p_NPP[[i]][,k],prob=0.89) )
+  shade( p_NPP_PI , NPP_seq,col=col.alpha("black",0.1))
+}
+axis( side = 1, at = labels.at, labels = preferred.NPP)
+points(agg_NPP$NPP_z, agg_NPP$r_play)
+mtext(text="Probability (Play)",side=2,line=2)
+
+plot( NULL , xlim=c(min(dc$NPP_z),max(dc$NPP_z)) , ylim=c(0,0.8) , xaxt = "n", main = "",adj=0, ylab = "", xlab = "", cex.main = .9)
+for ( k in 5:5 ) {
+  lines( NPP_seq , p_NPP_mean[k,], lwd = 2 ,col=col.alpha("black",1))
+  p_NPP_PI <- sapply( 1:length(p_NPP) , function(i) PI(p_NPP[[i]][,k],prob=0.89) )
+  shade( p_NPP_PI , NPP_seq,col=col.alpha("black",0.1))
+}
+axis( side = 1, at = labels.at, labels = preferred.NPP)
+points(agg_NPP$NPP_z, agg_NPP$r_znonworkobs)
+mtext(text="Probability (Other Activities)",side=2,line=2)
+
+mtext(text="Net Primary Productivity (NPP)",side=1,line=1,outer=TRUE)
+quartz.save(file="figS11.pdf",type="pdf")
+rm(agg_NPP)
+rm(NPP)
+rm(p_NPP)
+rm(p_NPP_mean)
+rm(p_NPP_PI)
+rm(k)
+rm(labels.at)
+rm(NPP_seq)
+rm(preferred.NPP)
+rm(seq.length)
+dev.off()
+
+######################
+###Make temp Figure###
+######################
+seq.length <- 100
+temp_seq <- seq(from= min(dc$temp_z) , to= max(dc$temp_z), length.out = seq.length)
+agg_temp <- aggregate ( cbind (r_food_production, r_znonworkobs, r_play, r_childcare, r_household) ~ Society+ temp_z, data = dc, FUN = mean)
+
+temp <- data.frame(
+  id = 0 ,
+  society=0,
+  sex = 0,
+  middle = 0,
+  nonforaged=mean(dc$nonforaged_z),
+  NPP=mean(dc$NPP_z),
+  temp=temp_seq,
+  prec=mean(dc$prec_z)
+)
+
+p_temp <- link.TA3.6 (temp)
+p_temp_mean <- sapply( 1:length(p_temp) , function(i) apply(p_temp[[i]],2,mean) )
+preferred.temp<-c(-5,5,15,25)
+labels.at <- (preferred.temp - mean(dc$meanAnnualTemp))/sd(dc$meanAnnualTemp)
+
+quartz(height = 6 , width = 10)
+par(mfrow=c(2,3), mar=c(1,2,1,2) + 0.1 , oma=c(2.5,4,2.5,2.5))
+plot( NULL , xlim=c(min(dc$temp_z),max(dc$temp_z)) , ylim=c(0,0.4) , xaxt = "n", main = "",adj=0, ylab = "", xlab = "", cex.main = .9)
+for ( k in 1:1 ) {
+  lines( temp_seq , p_temp_mean[k,], lwd = 2 ,col=col.alpha("black",1))
+  p_temp_PI <- sapply( 1:length(p_temp) , function(i) PI(p_temp[[i]][,k],prob=0.89) )
+  shade( p_temp_PI , temp_seq,col=col.alpha("black",0.1))
+}
+axis( side = 1, at = labels.at, labels = F)
+points(agg_temp$temp_z, agg_temp$r_childcare)
+mtext(text="Probability (Childcare)",side=2,line=2)
+
+plot( NULL , xlim=c(min(dc$temp_z),max(dc$temp_z)) , ylim=c(0,0.4) , xaxt = "n", main = "",adj=0, ylab = "", xlab = "", cex.main = .9)
+for ( k in 2:2 ) {
+  lines( temp_seq , p_temp_mean[k,], lwd = 2 ,col=col.alpha("black",1))
+  p_temp_PI <- sapply( 1:length(p_temp) , function(i) PI(p_temp[[i]][,k],prob=0.89) )
+  shade( p_temp_PI , temp_seq,col=col.alpha("black",0.1))
+}
+points(agg_temp$temp_z, agg_temp$r_food_production)
+
+axis( side = 1, at = labels.at, labels = F)
+mtext(text="Probability (Food Production)",side=2,line=2)
+
+plot( NULL , xlim=c(min(dc$temp_z),max(dc$temp_z)) , ylim=c(0,0.4) , xaxt = "n", main = "",adj=0, ylab = "", xlab = "", cex.main = .9)
+for ( k in 3:3 ) {
+  lines( temp_seq , p_temp_mean[k,], lwd = 2 ,col=col.alpha("black",1))
+  p_temp_PI <- sapply( 1:length(p_temp) , function(i) PI(p_temp[[i]][,k],prob=0.89) )
+  shade( p_temp_PI , temp_seq,col=col.alpha("black",0.1))
+}
+axis( side = 1, at = labels.at, labels = preferred.temp)
+points(agg_temp$temp_z, agg_temp$r_household)
+mtext(text="Probability (Domestic Work)",side=2,line=2)
+
+plot( NULL , xlim=c(min(dc$temp_z),max(dc$temp_z)) , ylim=c(0,0.4) , xaxt = "n", main = "",adj=0, ylab = "", xlab = "", cex.main = .9)
+for ( k in 4:4 ) {
+  lines( temp_seq , p_temp_mean[k,], lwd = 2 ,col=col.alpha("black",1))
+  p_temp_PI <- sapply( 1:length(p_temp) , function(i) PI(p_temp[[i]][,k],prob=0.89) )
+  shade( p_temp_PI , temp_seq,col=col.alpha("black",0.1))
+}
+axis( side = 1, at = labels.at, labels = preferred.temp)
+points(agg_temp$temp_z, agg_temp$r_play)
+mtext(text="Probability (Play)",side=2,line=2)
+
+plot( NULL , xlim=c(min(dc$temp_z),max(dc$temp_z)) , ylim=c(0,1) , xaxt = "n", main = "",adj=0, ylab = "", xlab = "", cex.main = .9)
+for ( k in 5:5) {
+  lines( temp_seq , p_temp_mean[k,], lwd = 2 ,col=col.alpha("black",1))
+  p_temp_PI <- sapply( 1:length(p_temp) , function(i) PI(p_temp[[i]][,k],prob=0.89) )
+  shade( p_temp_PI , temp_seq,col=col.alpha("black",0.1))
+}
+axis( side = 1, at = labels.at, labels = preferred.temp)
+points(agg_temp$temp_z, agg_temp$r_znonworkobs)
+mtext(text="Probability (Other Activities)",side=2,line=2)
+
+mtext(text="Annual Mean Temperature (°C)",side=1,line=1,outer=TRUE)
+
+quartz.save(file="figS12.pdf",type="pdf")
+rm(agg_temp)
+rm(p_temp)
+rm(p_temp_mean)
+rm(p_temp_PI)
+rm(temp)
+rm(k)
+rm(labels.at)
+rm(preferred.temp)
+rm(seq.length)
+rm(temp_seq)
+dev.off()
+
+rm(d)
+rm(ds)

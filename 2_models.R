@@ -152,7 +152,7 @@ n_chains_model1 <- 3
 init_model1 <- list()
 for ( i in 1:n_chains_model1 ) init_model1[[i]] <- start_model1
 
-mfit_model1 <- cstan( model_code=model1 , data=data_list1 , chains=n_chains_model1 , cores= 3 , warmup=1000, iter=2000, init=init_model1 , control = list(adapt_delta = 0.99, max_treedepth = 15))
+mfit_model1 <- stan( model_code=model1 , data=data_list1 , chains=n_chains_model1 , cores= 3 , warmup=1000, iter=2000, init=init_model1 , control = list(adapt_delta = 0.99, max_treedepth = 15))
 
 TA1<-precis(mfit_model1,dept=3,prob=0.95)
 write.csv(TA1,"TA1.csv")
@@ -289,7 +289,7 @@ n_chains_model2 <- 3
 init_model2 <- list()
 for ( i in 1:n_chains_model2 ) init_model2[[i]] <- start_model2
 
-mfit_model2 <- cstan( model_code=model2 , data=data_list2 , chains=n_chains_model2 , cores= 3 , warmup=1000, iter=2000, init=init_model2 , control = list(adapt_delta = 0.99, max_treedepth = 15))
+mfit_model2 <- stan( model_code=model2 , data=data_list2 , chains=n_chains_model2 , cores= 3 , warmup=1000, iter=2000, init=init_model2 , control = list(adapt_delta = 0.99, max_treedepth = 15))
 
 TA2<-precis(mfit_model2,dept=3,prob=0.95)
 write.csv(TA2,"TA2.csv")
@@ -438,7 +438,7 @@ n_chains_model5 <- 3
 init_model5 <- list()
 for ( i in 1:n_chains_model5 ) init_model5[[i]] <- start_model5
 
-mfit_model5 <- cstan( model_code=model5 , data=data_list5 , chains=n_chains_model5 , cores= 3 , warmup=1000, iter=2000, init=init_model5 , control = list(adapt_delta = 0.99, max_treedepth = 15))
+mfit_model5 <- stan( model_code=model5 , data=data_list5 , chains=n_chains_model5 , cores= 3 , warmup=1000, iter=2000, init=init_model5 , control = list(adapt_delta = 0.99, max_treedepth = 15))
 
 TA5<-precis(mfit_model5,dept=3,prob=0.95)
 write.csv(TA5,"TA5.csv")
@@ -598,7 +598,7 @@ n_chains_model3 <- 3
 init_model3 <- list()
 for ( i in 1:n_chains_model3 ) init_model3[[i]] <- start_model3
 
-mfit_model3 <- cstan( model_code=model3 , data=data_list3 , chains=n_chains_model3 , cores= 3 , warmup=1000, iter=2000, init=init_model3 , control = list(adapt_delta = 0.99, max_treedepth = 15))
+mfit_model3 <- stan( model_code=model3 , data=data_list3 , chains=n_chains_model3 , cores= 3 , warmup=1000, iter=2000, init=init_model3 , control = list(adapt_delta = 0.99, max_treedepth = 15))
 
 TA3<-precis(mfit_model3,dept=3,prob=0.95)
 write.csv(TA3,"TA3.csv")
@@ -751,7 +751,7 @@ n_chains_model4 <- 3
 init_model4 <- list()
 for ( i in 1:n_chains_model4 ) init_model4[[i]] <- start_model4
 
-mfit_model4 <- cstan( model_code=model4 , data=data_list4 , chains=n_chains_model4 , cores= 3 , warmup=1000, iter=2000, init=init_model4, control = list(adapt_delta = 0.99, max_treedepth = 15))
+mfit_model4 <- stan( model_code=model4 , data=data_list4 , chains=n_chains_model4 , cores= 3 , warmup=1000, iter=2000, init=init_model4, control = list(adapt_delta = 0.99, max_treedepth = 15))
 
 TA4<-precis(mfit_model4,dept=3,prob=0.95)
 write.csv(TA4,"TA4.csv")
@@ -887,7 +887,7 @@ n_chains_model3.1 <- 3
 init_model3.1 <- list()
 for ( i in 1:n_chains_model3.1 ) init_model3.1[[i]] <- start_model3.1
 
-mfit_model3.1 <- cstan( model_code=model3.1 , data=data_list3 , chains=n_chains_model3.1, cores= 3 , warmup=1000, iter=2000, init=init_model3.1 , control = list(adapt_delta = 0.99, max_treedepth = 15))
+mfit_model3.1 <- stan( model_code=model3.1 , data=data_list3 , chains=n_chains_model3.1, cores= 3 , warmup=1000, iter=2000, init=init_model3.1 , control = list(adapt_delta = 0.99, max_treedepth = 15))
 
 TA3.1<-precis(mfit_model3.1,dept=3,prob=0.95)
 write.csv(TA3.1,"TA3.1.csv")
@@ -1018,7 +1018,7 @@ n_chains_model3.2 <- 3
 init_model3.2 <- list()
 for ( i in 1:n_chains_model3.2 ) init_model3.2[[i]] <- start_model3.2
 
-mfit_model3.2 <- cstan( model_code=model3.2 , data=data_list3 , chains=n_chains_model3.2, cores= 3 , warmup=1000, iter=2000, init=init_model3.2 , control = list(adapt_delta = 0.99, max_treedepth = 15))
+mfit_model3.2 <- stan( model_code=model3.2 , data=data_list3 , chains=n_chains_model3.2, cores= 3 , warmup=1000, iter=2000, init=init_model3.2 , control = list(adapt_delta = 0.99, max_treedepth = 15))
 
 TA3.2<-precis(mfit_model3.2,dept=3,prob=0.95)
 write.csv(TA3.2,"TA3.2.csv")
@@ -1150,7 +1150,7 @@ n_chains_model3.3 <- 3
 init_model3.3 <- list()
 for ( i in 1:n_chains_model3.3 ) init_model3.3[[i]] <- start_model3.3
 
-mfit_model3.3 <- cstan( model_code=model3.3 , data=data_list3 , chains=n_chains_model3.3, cores= 3 , warmup=1000, iter=2000, init=init_model3.3 , control = list(adapt_delta = 0.99, max_treedepth = 15))
+mfit_model3.3 <- stan( model_code=model3.3 , data=data_list3 , chains=n_chains_model3.3, cores= 3 , warmup=1000, iter=2000, init=init_model3.3 , control = list(adapt_delta = 0.99, max_treedepth = 15))
 
 TA3.3<-precis(mfit_model3.3,dept=3,prob=0.95)
 write.csv(TA3.3,"TA3.3.csv")
@@ -1281,7 +1281,7 @@ n_chains_model3.4 <- 3
 init_model3.4 <- list()
 for ( i in 1:n_chains_model3.4 ) init_model3.4[[i]] <- start_model3.4
 
-mfit_model3.4 <- cstan( model_code=model3.4 , data=data_list3 , chains=n_chains_model3.4, cores= 3 , warmup=1000, iter=2000, init=init_model3.4 , control = list(adapt_delta = 0.99, max_treedepth = 15))
+mfit_model3.4 <- stan( model_code=model3.4 , data=data_list3 , chains=n_chains_model3.4, cores= 3 , warmup=1000, iter=2000, init=init_model3.4 , control = list(adapt_delta = 0.99, max_treedepth = 15))
 
 TA3.4<-precis(mfit_model3.4,dept=3,prob=0.95)
 write.csv(TA3.4,"TA3.4.csv")
@@ -1439,7 +1439,7 @@ n_chains_model3.5 <- 3
 init_model3.5 <- list()
 for ( i in 1:n_chains_model3.5 ) init_model3.5[[i]] <- start_model3.5
 
-mfit_model3.5 <- cstan( model_code=model3.5 , data=data_list3.5 , chains=n_chains_model3.5 , cores= 3 , warmup=1000, iter=2000, init=init_model3.5 , control = list(adapt_delta = 0.99, max_treedepth = 15))
+mfit_model3.5 <- stan( model_code=model3.5 , data=data_list3.5 , chains=n_chains_model3.5 , cores= 3 , warmup=1000, iter=2000, init=init_model3.5 , control = list(adapt_delta = 0.99, max_treedepth = 15))
 
 TA3.5<-precis(mfit_model3.5,dept=3,prob=0.95)
 write.csv(TA3.5,"TA3.5.csv")
@@ -1586,7 +1586,7 @@ n_chains_model3.6 <- 3
 init_model3.6 <- list()
 for ( i in 1:n_chains_model3.6 ) init_model3.6[[i]] <- start_model3.6
 
-mfit_model3.6 <- cstan( model_code=model3.6 , data=data_list3.6 , chains=n_chains_model3.6 , cores= 3 , warmup=1000, iter=2000, init=init_model3.6 , control = list(adapt_delta = 0.99, max_treedepth = 15))
+mfit_model3.6 <- stan( model_code=model3.6 , data=data_list3.6 , chains=n_chains_model3.6 , cores= 3 , warmup=1000, iter=2000, init=init_model3.6 , control = list(adapt_delta = 0.99, max_treedepth = 15))
 
 TA3.6<-precis(mfit_model3.6,dept=3,prob=0.95)
 write.csv(TA3.6,"TA3.6.csv")
@@ -1716,7 +1716,7 @@ n_chains_model3.7 <- 3
 init_model3.7 <- list()
 for ( i in 1:n_chains_model3.7 ) init_model3.7[[i]] <- start_model3.7
 
-mfit_model3.7 <- cstan( model_code=model3.7 , data=data_list3.5 , chains=n_chains_model3.7 , cores= 3 , warmup=1000, iter=2000, init=init_model3.7 , control = list(adapt_delta = 0.99, max_treedepth = 15))
+mfit_model3.7 <- stan( model_code=model3.7 , data=data_list3.5 , chains=n_chains_model3.7 , cores= 3 , warmup=1000, iter=2000, init=init_model3.7 , control = list(adapt_delta = 0.99, max_treedepth = 15))
 
 TA3.7<-precis(mfit_model3.7,dept=3,prob=0.95)
 write.csv(TA3.7,"TA3.7.csv")
@@ -1846,7 +1846,7 @@ n_chains_model4.1 <- 3
 init_model4.1 <- list()
 for ( i in 1:n_chains_model4.1 ) init_model4.1[[i]] <- start_model4.1
 
-mfit_model4.1 <- cstan( model_code=model4.1 , data=data_list4 , chains=n_chains_model4.1 , cores= 3 , warmup=1000, iter=2000, init=init_model4.1, control = list(adapt_delta = 0.99, max_treedepth = 15))
+mfit_model4.1 <- stan( model_code=model4.1 , data=data_list4 , chains=n_chains_model4.1 , cores= 3 , warmup=1000, iter=2000, init=init_model4.1, control = list(adapt_delta = 0.99, max_treedepth = 15))
 
 TA4.1<-precis(mfit_model4.1,dept=3,prob=0.95)
 write.csv(TA4.1,"TA4.1.csv")
@@ -1976,7 +1976,7 @@ n_chains_model4.2 <- 3
 init_model4.2 <- list()
 for ( i in 1:n_chains_model4.2 ) init_model4.2[[i]] <- start_model4.2
 
-mfit_model4.2 <- cstan( model_code=model4.2 , data=data_list4 , chains=n_chains_model4.2 , cores= 3 , warmup=1000, iter=2000, init=init_model4.2, control = list(adapt_delta = 0.99, max_treedepth = 15))
+mfit_model4.2 <- stan( model_code=model4.2 , data=data_list4 , chains=n_chains_model4.2 , cores= 3 , warmup=1000, iter=2000, init=init_model4.2, control = list(adapt_delta = 0.99, max_treedepth = 15))
 
 TA4.2<-precis(mfit_model4.2,dept=3,prob=0.95)
 write.csv(TA4.2,"TA4.2.csv")
@@ -2106,7 +2106,7 @@ n_chains_model4.3 <- 3
 init_model4.3 <- list()
 for ( i in 1:n_chains_model4.3 ) init_model4.3[[i]] <- start_model4.3
 
-mfit_model4.3 <- cstan( model_code=model4.3 , data=data_list4 , chains=n_chains_model4.3 , cores= 3 , warmup=1000, iter=2000, init=init_model4.3, control = list(adapt_delta = 0.99, max_treedepth = 15))
+mfit_model4.3 <- stan( model_code=model4.3 , data=data_list4 , chains=n_chains_model4.3 , cores= 3 , warmup=1000, iter=2000, init=init_model4.3, control = list(adapt_delta = 0.99, max_treedepth = 15))
 
 TA4.3<-precis(mfit_model4.3,dept=3,prob=0.95)
 write.csv(TA4.3,"TA4.3.csv")
@@ -2245,7 +2245,7 @@ n_chains_model4.4 <- 3
 init_model4.4 <- list()
 for ( i in 1:n_chains_model4.4 ) init_model4.4[[i]] <- start_model4.4
 
-mfit_model4.4 <- cstan( model_code=model4.4 , data=data_list4.4 , chains=n_chains_model4.4 , cores= 3 , warmup=1000, iter=2000, init=init_model4.4, control = list(adapt_delta = 0.99, max_treedepth = 15))
+mfit_model4.4 <- stan( model_code=model4.4 , data=data_list4.4 , chains=n_chains_model4.4 , cores= 3 , warmup=1000, iter=2000, init=init_model4.4, control = list(adapt_delta = 0.99, max_treedepth = 15))
 
 TA4.4<-precis(mfit_model4.4,dept=3,prob=0.95)
 write.csv(TA4.4,"TA4.4.csv")
