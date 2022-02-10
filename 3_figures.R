@@ -202,7 +202,7 @@ p_highdiv <- link.TA5 (pred_data_highdiv)
 p_highdiv_mean <- sapply( 1:length(p_highdiv) , function(i) apply(p_highdiv[[i]],2,mean) )
 
 quartz(height = 8 , width = 10)
-par(mfrow=c(2,1), mar=c(1,2,1,2) + 0.2 , oma=c(4,4,4,4))
+par(mfrow=c(2,1), mar=c(1,2,1,2) + 0.2 , oma=c(5,5,2.5,2.5))
 
 plot( NULL , xlim=c(-0.5,3.5) , ylim=c(0,0.5) , xaxt = "n", main = " ",adj=0, ylab = "", xlab = "", cex.main = .9)
 for ( k in 1:1 ) {
@@ -282,7 +282,21 @@ for ( k in 4:4) {
 ##labels.at<-c(0,1,2,3,4)
 axis( side = 1, at = labels.at, labels = c("Childcare","Food Production","Domestic Work","Play"))
 mtext(text="Probability (activity)",side=2,line=2)
-mtext(text="(B) Female-Biased (Top) and Male-Biased (Bottom) Gendered Division of Food Production Labour",side=1,line=3,font=2)
+mtext(text="Female-Biased (Top) and Male-Biased (Bottom) Gendered Division of Food Production Labour",side=1,line=3,font=2)
+par(fig = c(0, 1, 0, 1), oma = c(0, 0, 0, 0), mar = c(0, 0, 0, 0), new = TRUE)
+plot(0, 0, type = "n", bty = "n", xaxt = "n", yaxt = "n")
+legend("bottomleft", 
+       inset=0, 
+       cex = 0.75, 
+       c("Girls","Boys"), 
+       horiz=TRUE, 
+       lty=c(1,1), 
+       lwd=c(2,2), 
+       col=c("darkorange","purple"), 
+       bg="grey96",
+       title="",
+       text.font=0.5)
+
 
 quartz.save(file="fig4.pdf",type="pdf")
 dev.off()
@@ -1055,7 +1069,7 @@ legend("bottomleft",
        horiz=TRUE, 
        lty=c(1,1), 
        lwd=c(2,2), 
-       col=c("blue","navy","brown"), 
+       col=c("lightblue","navy","brown"), 
        bg="grey96",
        title="Water",
        text.font=0.5)
@@ -1127,7 +1141,7 @@ legend("bottomleft",
        horiz=TRUE, 
        lty=c(1,1), 
        lwd=c(2,2), 
-       col=c("blue","navy","brown"), 
+       col=c("lightblue","navy","brown"), 
        bg="grey96",
        title="Water",
        text.font=0.5)
