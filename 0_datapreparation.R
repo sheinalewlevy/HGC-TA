@@ -494,23 +494,24 @@ d$nonforaged_z<-(d$nonforaged-mean(d$nonforaged))/sd(d$nonforaged)
 d$temp_z<-(d$meanAnnualTemp-mean(d$meanAnnualTemp))/sd(d$meanAnnualTemp)
 d$prec_z<-(d$totalAnnualPrec-mean(d$totalAnnualPrec))/sd(d$totalAnnualPrec)
 
-M3<-d%>%dplyr::select(Middle,Ado,Sex,div,nonforaged_z)
-c1<-as.data.frame(cor(M3))
-v1<-as.data.frame(vif(M3))
-c1<-cbind(c1,v1)
-write.csv(c1,"c1.csv")
-
-M4<-d%>%dplyr::select(Middle,Ado,Sex,dens,water_rating,nonforaged_z)
-c2<-as.data.frame(cor(M4))
-v2<-as.data.frame(vif(M4))
-c2<-cbind(c2,v2)
-write.csv(c2,"c2.csv")
-
-M5<-d%>%dplyr::select(Middle,Ado,Sex,NPP_z,temp_z,prec_z,nonforaged_z)
-c3<-as.data.frame(cor(M5))
-v3<-as.data.frame(vif(M5))
+M3<-d%>%dplyr::select(Middle,Ado,Sex,NPP_z,temp_z,prec_z,nonforaged_z)
+c3<-as.data.frame(cor(M3))
+v3<-as.data.frame(vif(M3))
 c3<-cbind(c3,v3)
 write.csv(c3,"c3.csv")
+
+M4<-d%>%dplyr::select(Middle,Ado,Sex,dens,water_rating,nonforaged_z)
+c4<-as.data.frame(cor(M4))
+v4<-as.data.frame(vif(M4))
+c4<-cbind(c4,v4)
+write.csv(c4,"c4.csv")
+
+M5<-d%>%dplyr::select(Middle,Ado,Sex,div,nonforaged_z)
+c5<-as.data.frame(cor(M5))
+v5<-as.data.frame(vif(M5))
+c5<-cbind(c5,v5)
+write.csv(c5,"c5.csv")
+
 
 #################################################################
 ###PROPORTION OF NON-FORAGED FOOD AND SEXUAL DIVISION OF LABOR###
