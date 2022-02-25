@@ -1,8 +1,8 @@
 ##This is the code for the figures for the analysis of foraging children's participation in play and work. 
 
-##NOTE: This code will not work without requesting the Tsimane dataset from Jonathan Stieglitz (jonathan.stieglitz@iast.fr)
+##Note that data for Tsimane should be requested directly from Jonathan Stieglitz (jonathan.stieglitz@gmail.com)
 
-##set working directory to 'data', or wherever you have saved the posterior samples from the model
+##Due to file size limits, model outputs are [available for download as a zip file here](https://www.dropbox.com/s/chs9eyejzoernv2/post_rv.zip?dl=0) or upon request from Sheina Lew-Levy (sheinalewlevy@gmail.com)
 
 ##IF you don't have the rethinking package, load it following the instructions here https://xcelab.net/rm/software/
 
@@ -18,6 +18,7 @@ load(file="post4.rda")
 load(file="post5.rda")
 load(file="post3.4.rda")
 load(file="post4.3.rda")
+load(file="post3.5.rda")
 load(file="post3.6.rda")
 
 d<-read.csv("dataset.csv")
@@ -201,10 +202,11 @@ p_lowdiv_mean <- sapply( 1:length(p_lowdiv) , function(i) apply(p_lowdiv[[i]],2,
 p_highdiv <- link.TA5 (pred_data_highdiv)
 p_highdiv_mean <- sapply( 1:length(p_highdiv) , function(i) apply(p_highdiv[[i]],2,mean) )
 
-quartz(height = 8 , width = 10)
-par(mfrow=c(2,1), mar=c(1,2,1,2) + 0.2 , oma=c(5,5,2.5,2.5))
 
-plot( NULL , xlim=c(-0.5,3.5) , ylim=c(0,0.5) , xaxt = "n", main = " ",adj=0, ylab = "", xlab = "", cex.main = .9)
+quartz(height = 6 , width = 18)
+par(mfrow=c(1,2), mar=c(1,2,1,2) , oma=c(5,2.5,2.5,2.5))
+
+plot( NULL , xlim=c(-0.5,3.5) , ylim=c(0,0.5) , xaxt = "n", main = " ",adj=0, ylab = "", xlab = "", cex.main = .9, cex.axis=1.2)
 for ( k in 1:1 ) {
   p_lowdiv_PI <- sapply( 1:length(p_lowdiv) , function(i) PI(p_lowdiv[[i]][,k],prob=0.89) ) 
   segments(-0.1,p_lowdiv_PI[1,1],-0.1,p_lowdiv_PI[2,1],col=col.alpha("dark orange",1),lwd=3)
@@ -240,11 +242,13 @@ for ( k in 4:4) {
  ## points( c(3.9,4.1) , p_lowdiv_mean[k,], pch = 21, bg = "white",col=col.alpha("black",1))
 ##}
 labels.at<-c(0,1,2,3)
-axis( side = 1, at = labels.at, labels = F)
-mtext(text="Probability (activity)",side=2,line=2)
+axis( side = 1, at = labels.at, labels = c("Childcare","Food Production","Domestic Work","Play"), cex.axis=1.3)
+
+mtext(text="(A) Female-Biased Gendered Division of Food Production Labour",side=1,line=3,cex=1.4)
+mtext(text="Probability (activity)",side=2,line=2, cex=1.4)
 
 
-plot( NULL , xlim=c(-0.5,3.5) , ylim=c(0,0.5) , xaxt = "n", main = " ",adj=0, ylab = "", xlab = "", cex.main = .9)
+plot( NULL , xlim=c(-0.5,3.5) , ylim=c(0,0.5) , xaxt = "n",  main = " ",adj=0, ylab = "", xlab = "", cex.main = .9, cex.axis=1, col.axis = "white")
 for ( k in 1:1 ) {
   p_highdiv_PI <- sapply( 1:length(p_highdiv) , function(i) PI(p_highdiv[[i]][,k],prob=0.89) ) 
   segments(-0.1,p_highdiv_PI[1,1],-0.1,p_highdiv_PI[2,1],col=col.alpha("dark orange",1),lwd=3)
@@ -280,22 +284,21 @@ for ( k in 4:4) {
 ##  points( c(3.9,4.1) , p_highdiv_mean[k,], pch = 21, bg = "white",col=col.alpha("black",1))
 ##}
 ##labels.at<-c(0,1,2,3,4)
-axis( side = 1, at = labels.at, labels = c("Childcare","Food Production","Domestic Work","Play"))
-mtext(text="Probability (activity)",side=2,line=2)
-mtext(text="Female-Biased (Top) and Male-Biased (Bottom) Gendered Division of Food Production Labour",side=1,line=3,font=2)
-par(fig = c(0, 1, 0, 1), oma = c(0, 0, 0, 0), mar = c(0, 0, 0, 0), new = TRUE)
-plot(0, 0, type = "n", bty = "n", xaxt = "n", yaxt = "n")
-legend("bottomleft", 
+axis( side = 1, at = labels.at, labels = c("Childcare","Food Production","Domestic Work","Play"), cex.axis=1.3)
+mtext(text="(B) Male-Biased Gendered Division of Food Production Labour",side=1,line=3,cex=1.4)
+
+legend("topright", 
        inset=0, 
-       cex = 0.75, 
+       cex = 1.2, 
        c("Girls","Boys"), 
-       horiz=TRUE, 
+       horiz=FALSE, 
        lty=c(1,1), 
        lwd=c(2,2), 
        col=c("darkorange","purple"), 
-       bg="grey96",
        title="",
-       text.font=0.5)
+       bty="n",
+       text.font=1.3)
+
 
 
 quartz.save(file="fig4.pdf",type="pdf")
@@ -370,6 +373,18 @@ points(agg_m$div, agg_m$r_childcare,col="purple")
 axis( side = 1, at = labels.at, labels = F)
 mtext(text="Probability (Childcare)",side=2,line=2)
 
+legend("topright", 
+       inset=0, 
+       cex = 0.75, 
+       c("Girls","Boys"), 
+       horiz=TRUE, 
+       lty=c(1,1), 
+       lwd=c(2,2), 
+       col=c("darkorange","purple"), 
+       bg="grey96",
+       title="",
+       text.font=0.5)
+
 plot( NULL , xlim=c(min(d$div),max(d$div)) , ylim=c(0,0.35) , xaxt = "n", main = "",adj=0, ylab = "", xlab = "", cex.main = .9)
 for ( k in 2:2 ) {
   lines( div_seq , p_divf_mean[k,], lwd = 2 ,col=col.alpha("dark orange",1))
@@ -435,19 +450,7 @@ axis( side = 1, at = labels.at, labels = labels.at)
 mtext(text="Probability (Other Activities)",side=2,line=2)
 
 mtext(text="Gendered Division of Food Production Labour",side=1,line=1,outer=TRUE)
-par(fig = c(0, 1, 0, 1), oma = c(0, 0, 0, 0), mar = c(0, 0, 0, 0), new = TRUE)
-plot(0, 0, type = "n", bty = "n", xaxt = "n", yaxt = "n")
-legend("bottomleft", 
-       inset=0, 
-       cex = 0.75, 
-       c("Girls","Boys"), 
-       horiz=TRUE, 
-       lty=c(1,1), 
-       lwd=c(2,2), 
-       col=c("darkorange","purple"), 
-       bg="grey96",
-       title="",
-       text.font=0.5)
+
 
 quartz.save(file="figS7.pdf",type="pdf")
 dev.off()
@@ -855,11 +858,11 @@ p_dens_mean <- sapply( 1:length(p_dens) , function(i) apply(p_dens[[i]],2,mean) 
 labels.at <- c(1,2,3,4)
 
 ##Make figure
-quartz(height = 6 , width = 11)
-par(mfrow=c(1,1), mar=c(1,2,1,2) + 2 , oma=c(2.5,4,2.5,2.5))
+quartz(height = 6 , width = 18)
+par(mfrow=c(1,2), mar=c(1,2,1,2) , oma=c(5,2.5,2.5,2.5))
 
 ##
-plot( NULL , xlim=c(0.5,4.5) , ylim=c(0,0.4) , xaxt = "n", main = "",adj=0, ylab = "", xlab = "", cex.main = .9)
+plot( NULL , xlim=c(0.5,4.5) , ylim=c(0,0.4) , xaxt = "n", main = "",adj=0, ylab = "", xlab = "", cex.main = .9, cex.axis=1.2)
 for ( k in 1:1 ) {
   p_dens_PI <- sapply( 1:length(p_dens) , function(i) PI(p_dens[[i]][,k],prob=0.89) ) 
   segments(0.9,p_dens_PI[1,1],0.9,p_dens_PI[2,1],col=col.alpha("red",1),lwd=3)
@@ -894,24 +897,101 @@ for ( k in 4:4) {
 }
 
 
-axis( side = 1, at = labels.at, labels = c("Childcare","Food Production","Domestic Work","Play"))
-mtext(text="Probability (Activity)",side=2,line=2)
-mtext(text="(A) Activity Participation by Dangerous Mammal Density",side=1,line=3,font=2)
-par(fig = c(0, 1, 0, 1), oma = c(0, 0, 0, 0), mar = c(0, 0, 0, 0), new = TRUE)
-plot(0, 0, type = "n", bty = "n", xaxt = "n", yaxt = "n")
-legend("bottomleft", 
+axis( side = 1, at = labels.at, labels = c("Childcare","Food Production","Domestic Work","Play"), cex.axis=1.3)
+mtext(text="Probability (Activity)",side=2,line=2, cex=1.4)
+mtext(text="(A) Activity Participation by Dangerous Mammal Density",side=1,line=3,cex=1.4)
+
+legend("topleft", 
        inset=0, 
-       cex = 0.75, 
-       c("<1",">10"), 
-       horiz=TRUE, 
+       cex = 1.2, 
+       c("<1 n/km2",">10 n/km2"), 
+       horiz=FALSE, 
        lty=c(1,1), 
        lwd=c(2,2), 
        col=c("red","purple"), 
-       bg="grey96",
-       title="Dangerous Mammal Density (n/km2)",
-       text.font=0.5)
+       bg="",
+       bty="n",
+       title="Dangerous Mammal Density",
+       text.font=1.3)
 
-quartz.save(file="fig3a.pdf",type="pdf")
+########################################
+###Make Water Quality/Quantity Figure###
+########################################
+
+Water<- data.frame(
+  id = 0 ,
+  society=0,
+  sex = 0,
+  middle = 1,
+  ado = 0,
+  water=c(1,2,4),
+  dens=0,
+  nonforaged=mean(d$nonforaged_z)
+)
+
+seq.length<-3
+p_Water<-link.TA4 (Water)
+p_Water_mean <- sapply( 1:length(p_Water) , function(i) apply(p_Water[[i]],2,mean) )
+
+##Make Figure for effect of water on children's activities
+labels.at <- c(1,2,3,4)
+
+plot( NULL , xlim=c(0.5,4.5) , ylim=c(0,0.4) , xaxt = "n", main = "",adj=0, ylab = "", xlab = "", cex.main = .9, cex.axis=1, col.axis = "white")
+for ( k in 1:1 ) {
+  p_Water_PI <- sapply( 1:length(p_Water) , function(i) PI(p_Water[[i]][,k],prob=0.89) ) 
+  segments(0.75,p_Water_PI[1,1],0.75,p_Water_PI[2,1],col=col.alpha("lightblue",1),lwd=3)
+  segments(1,p_Water_PI[1,2],1,p_Water_PI[2,2],col=col.alpha("navy",1),lwd=3)
+  segments(1.25,p_Water_PI[1,3],1.25,p_Water_PI[2,3],col=col.alpha("brown",1),lwd=3)
+  
+  points( c(0.75,1,1.25) , p_Water_mean[k,], pch = 21, bg = "white",col=col.alpha("black",1))
+}
+
+for ( k in 2:2 ) {
+  p_Water_PI <- sapply( 1:length(p_Water) , function(i) PI(p_Water[[i]][,k],prob=0.89) ) 
+  segments(1.75,p_Water_PI[1,1],1.75,p_Water_PI[2,1],col=col.alpha("lightblue",1),lwd=3)
+  segments(2,p_Water_PI[1,2],2,p_Water_PI[2,2],col=col.alpha("navy",1),lwd=3)
+  segments(2.25,p_Water_PI[1,3],2.25,p_Water_PI[2,3],col=col.alpha("brown",1),lwd=3)
+  
+  points( c(1.75,2,2.25) , p_Water_mean[k,], pch = 21, bg = "white",col=col.alpha("black",1))
+}
+
+for ( k in 3:3 ) {
+  p_Water_PI <- sapply( 1:length(p_Water) , function(i) PI(p_Water[[i]][,k],prob=0.89) ) 
+  segments(2.75,p_Water_PI[1,1],2.75,p_Water_PI[2,1],col=col.alpha("lightblue",1),lwd=3)
+  segments(3,p_Water_PI[1,2],3,p_Water_PI[2,2],col=col.alpha("navy",1),lwd=3)
+  segments(3.25,p_Water_PI[1,3],3.25,p_Water_PI[2,3],col=col.alpha("brown",1),lwd=3)
+  
+  points( c(2.75,3,3.25) , p_Water_mean[k,], pch = 21, bg = "white",col=col.alpha("black",1))
+}
+
+for ( k in 4:4 ) {
+  p_Water_PI <- sapply( 1:length(p_Water) , function(i) PI(p_Water[[i]][,k],prob=0.89) ) 
+  segments(3.75,p_Water_PI[1,1],3.75,p_Water_PI[2,1],col=col.alpha("lightblue",1),lwd=3)
+  segments(4,p_Water_PI[1,2],4,p_Water_PI[2,2],col=col.alpha("navy",1),lwd=3)
+  segments(4.25,p_Water_PI[1,3],4.25,p_Water_PI[2,3],col=col.alpha("brown",1),lwd=3)
+  
+  points( c(3.75,4,4.25) , p_Water_mean[k,], pch = 21, bg = "white",col=col.alpha("black",1))
+}
+
+
+axis( side = 1, at = labels.at, labels = c("Childcare","Food Production","Domestic Work","Play"), cex.axis=1.3)
+
+mtext(text="(B) Activity Participation by Water Quality/Quantity",side=1,line=3,cex=1.4)
+legend("topleft", 
+       inset=0, 
+       cex = 1.2, 
+       c("High Quality/Quantity","Low Quality/High Quantity","Low Quality/Quantity"), 
+       horiz=FALSE, 
+       lty=c(1,1), 
+       lwd=c(2,2), 
+       col=c("lightblue","navy","brown"), 
+       bg="",
+       bty="n",
+       title="Water",
+       text.font=1.3)
+
+quartz.save(file="fig3.pdf",type="pdf")
+
 
 #####################################################################
 ###Same figure but with the Other Activities category for the supp###
@@ -971,13 +1051,11 @@ for ( k in 5:5) {
 axis( side = 1, at = labels.at, labels = c("Childcare","Food Production","Domestic Work","Play","Other Activities"))
 mtext(text="Probability (Activity)",side=2,line=2)
 mtext(text="(A) Activity Participation by Dangerous Mammal Density",side=1,line=3,font=2)
-par(fig = c(0, 1, 0, 1), oma = c(0, 0, 0, 0), mar = c(0, 0, 0, 0), new = TRUE)
-plot(0, 0, type = "n", bty = "n", xaxt = "n", yaxt = "n")
-legend("bottomleft", 
+legend("topleft", 
        inset=0, 
        cex = 0.75, 
        c("<1",">10"), 
-       horiz=TRUE, 
+       horiz=FALSE, 
        lty=c(1,1), 
        lwd=c(2,2), 
        col=c("red","purple"), 
@@ -995,86 +1073,6 @@ rm(labels.at)
 rm(seq.length)
 dev.off()
 
-########################################
-###Make Water Quality/Quantity Figure###
-########################################
-
-Water<- data.frame(
-  id = 0 ,
-  society=0,
-  sex = 0,
-  middle = 1,
-  ado = 0,
-  water=c(1,2,4),
-  dens=0,
-  nonforaged=mean(d$nonforaged_z)
-)
-
-seq.length<-3
-p_Water<-link.TA4 (Water)
-p_Water_mean <- sapply( 1:length(p_Water) , function(i) apply(p_Water[[i]],2,mean) )
-
-##Make Figure for effect of water on children's activities
-labels.at <- c(1,2,3,4)
-
-quartz(height = 6 , width =11)
-par(mfrow=c(1,1), mar=c(1,2,1,2)+2 , oma=c(5,2.5,2.5,2.5))
-plot( NULL , xlim=c(0.5,4.5) , ylim=c(0,0.4) , xaxt = "n", main = "",adj=0, ylab = "", xlab = "", cex.main = .9)
-for ( k in 1:1 ) {
-  p_Water_PI <- sapply( 1:length(p_Water) , function(i) PI(p_Water[[i]][,k],prob=0.89) ) 
-  segments(0.75,p_Water_PI[1,1],0.75,p_Water_PI[2,1],col=col.alpha("lightblue",1),lwd=3)
-  segments(1,p_Water_PI[1,2],1,p_Water_PI[2,2],col=col.alpha("navy",1),lwd=3)
-  segments(1.25,p_Water_PI[1,3],1.25,p_Water_PI[2,3],col=col.alpha("brown",1),lwd=3)
-
-  points( c(0.75,1,1.25) , p_Water_mean[k,], pch = 21, bg = "white",col=col.alpha("black",1))
-}
-
-for ( k in 2:2 ) {
-  p_Water_PI <- sapply( 1:length(p_Water) , function(i) PI(p_Water[[i]][,k],prob=0.89) ) 
-  segments(1.75,p_Water_PI[1,1],1.75,p_Water_PI[2,1],col=col.alpha("lightblue",1),lwd=3)
-  segments(2,p_Water_PI[1,2],2,p_Water_PI[2,2],col=col.alpha("navy",1),lwd=3)
-  segments(2.25,p_Water_PI[1,3],2.25,p_Water_PI[2,3],col=col.alpha("brown",1),lwd=3)
-  
-  points( c(1.75,2,2.25) , p_Water_mean[k,], pch = 21, bg = "white",col=col.alpha("black",1))
-}
-
-for ( k in 3:3 ) {
-  p_Water_PI <- sapply( 1:length(p_Water) , function(i) PI(p_Water[[i]][,k],prob=0.89) ) 
-  segments(2.75,p_Water_PI[1,1],2.75,p_Water_PI[2,1],col=col.alpha("lightblue",1),lwd=3)
-  segments(3,p_Water_PI[1,2],3,p_Water_PI[2,2],col=col.alpha("navy",1),lwd=3)
-  segments(3.25,p_Water_PI[1,3],3.25,p_Water_PI[2,3],col=col.alpha("brown",1),lwd=3)
-  
-  points( c(2.75,3,3.25) , p_Water_mean[k,], pch = 21, bg = "white",col=col.alpha("black",1))
-}
-
-for ( k in 4:4 ) {
-  p_Water_PI <- sapply( 1:length(p_Water) , function(i) PI(p_Water[[i]][,k],prob=0.89) ) 
-  segments(3.75,p_Water_PI[1,1],3.75,p_Water_PI[2,1],col=col.alpha("lightblue",1),lwd=3)
-  segments(4,p_Water_PI[1,2],4,p_Water_PI[2,2],col=col.alpha("navy",1),lwd=3)
-  segments(4.25,p_Water_PI[1,3],4.25,p_Water_PI[2,3],col=col.alpha("brown",1),lwd=3)
-  
-  points( c(3.75,4,4.25) , p_Water_mean[k,], pch = 21, bg = "white",col=col.alpha("black",1))
-}
-
-
-axis( side = 1, at = labels.at, labels = c("Childcare","Food Production","Domestic Work","Play"))
-mtext(text="Probability (Activity)",side=2,line=2)
-mtext(text="(B) Activity Participation by Water Quality/Quantity",side=1,line=3,font=2)
-par(fig = c(0, 1, 0, 1), oma = c(0, 0, 0, 0), mar = c(0, 0, 0, 0), new = TRUE)
-plot(0, 0, type = "n", bty = "n", xaxt = "n", yaxt = "n")
-legend("bottomleft", 
-       inset=0, 
-       cex = 0.75, 
-       c("High Quality/Quantity","Low Quality/High Quantity","Low Quality/Quantity"), 
-       horiz=TRUE, 
-       lty=c(1,1), 
-       lwd=c(2,2), 
-       col=c("lightblue","navy","brown"), 
-       bg="grey96",
-       title="Water",
-       text.font=0.5)
-
-quartz.save(file="fig3b.pdf",type="pdf")
 
 #######################################################################
 ###Make same figure but for the supplement with the Other Activities###
@@ -1132,13 +1130,11 @@ for ( k in 5:5 ) {
 axis( side = 1, at = labels.at, labels = c("Childcare","Food Production","Domestic Work","Play","Other Activities"))
 mtext(text="Probability (Activity)",side=2,line=2)
 mtext(text="(B) Activity Participation by Water Quality/Quantity",side=1,line=3,font=2)
-par(fig = c(0, 1, 0, 1), oma = c(0, 0, 0, 0), mar = c(0, 0, 0, 0), new = TRUE)
-plot(0, 0, type = "n", bty = "n", xaxt = "n", yaxt = "n")
-legend("bottomleft", 
+legend("topleft", 
        inset=0, 
        cex = 0.75, 
        c("High Quality/Quantity","Low Quality/High Quantity","Low Quality/Quantity"), 
-       horiz=TRUE, 
+       horiz=FALSE, 
        lty=c(1,1), 
        lwd=c(2,2), 
        col=c("lightblue","navy","brown"), 
@@ -1154,7 +1150,6 @@ rm(p_Water_PI)
 rm(Water)
 rm(k)
 rm(labels.at)
-rm(seq.length)
 rm(link.TA4)
 dev.off()
 

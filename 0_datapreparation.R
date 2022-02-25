@@ -274,19 +274,19 @@ levels(figure2$Society)[levels(figure2$Society)=="Pume"] <- "Pumé"
 
 ##Now we make Figure 2
 childcare<-ggplot(figure2, aes(x=Society, y=childcare, fill=Age_cat_title)) + geom_bar(stat="identity",position="dodge",width=0.7) + facet_grid(Sex_title~.)
-childcare<- childcare + theme_classic() + ylab("Childcare") + xlab("") + theme(legend.title = element_blank())
+childcare<- childcare + theme_classic(base_size=14) + ylab("Childcare") + xlab("") + theme(legend.title = element_blank())
 childcare
 
 food<-ggplot(figure2, aes(x=Society, y=food_production, fill=Age_cat_title)) + geom_bar(stat="identity",position="dodge",width=0.7) + facet_grid(Sex_title~.)
-food<- food+ theme_classic() + ylab(" Food production") + xlab("") 
+food<- food+ theme_classic(base_size=14) + ylab(" Food production") + xlab("") 
 food
 
 household<-ggplot(figure2, aes(x=Society, y=household, fill=Age_cat_title)) + geom_bar(stat="identity",position="dodge",width=0.7) +  facet_grid(Sex_title~.) 
-household<- household + theme_classic() + ylab("Domestic work") + xlab("") 
+household<- household + theme_classic(base_size=14) + ylab("Domestic work") + xlab("") 
 household
 
 play<-ggplot(figure2, aes(x=Society, y=play, fill=Age_cat_title)) + geom_bar(stat="identity",position="dodge",width=0.7) + facet_grid(Sex_title~.)
-play<- play + theme_classic() + ylab("Play") + xlab("") 
+play<- play + theme_classic(base_size=14) + ylab("Play") + xlab("") 
 play
 
 fig2<-ggarrange(

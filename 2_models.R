@@ -1,6 +1,6 @@
 ##This is the code for the models for the analysis of foraging children's participation in play and work. 
 ##WARNING: These models take weeks to fit. 
-##NOTE: This code will not run without requesting the Tsimane dataset from Jonathan Stieglitz (jonathan.stieglitz@iast.fr)
+##Note that data for Tsimane should be requested directly from Jonathan Stieglitz (jonathan.stieglitz@gmail.com)
 ##Make sure to set working directory to 'data'
 ##IF you don't have the necessary packages, load them following the instructions here https://xcelab.net/rm/software/
 
